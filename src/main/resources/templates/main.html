@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <div th:replace="common/head :: head"></div>
+        <title>메인화면</title>
+    </head>
+<body>
+
+<script th:inline="javascript">
+    const token = /*[[${_csrf.token}]]*/;
+    const header = /*[[${_csrf.headerName}]]*/;
+    const userInfo = /*[[${#authentication.principal}]]*/;
+</script>
+<script src="/models/api-wrapper.js"></script>
+<script src="/models/userService.js"></script>
+<!--<script src="/views/main/logic.js" type="module"></script>-->
+<!--<script src="/views/main/app.js" type="module"></script>-->
+<link rel="stylesheet" href="/views/component/maps/openlayers/style.css" type="text/css">
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ani20ke4u0&amp;submodules=drawing"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2f898a8f48dfc12ad4f88fffe5f992b8&libraries=services,clusterer,drawing"></script>
+<script src="/views/main.js" id="mainViewJs" data-name="main" type="module"></script>
+
+
+</body>
+</html>

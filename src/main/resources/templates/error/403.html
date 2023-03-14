@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:replace="common/head :: head"></div>
+    <title>403</title>
+</head>
+<body>
+
+<script th:inline="javascript">
+    webix.alert({ text: '해당 페이지의 접근 권한이 존재하지 않습니다.' ,expire: 500}).then(function(){
+        history.go(-1);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:replace="common/head :: head"></div>
+    <title>메인화면</title>
+</head>
+<body>
+
+<script th:inline="javascript">
+    const token = /*[[${_csrf.token}]]*/;
+    const header = /*[[${_csrf.headerName}]]*/;
+    const userInfo = /*[[${#authentication.principal}]]*/;
+    //console.log("userInfo:" + JSON.stringify(userInfo));
+</script>
+<!--<script src="/views/main/logic.js" type="module"></script>-->
+<!--<script src="/views/main/app.js" type="module"></script>-->
+<script src="/views/component/openlayers/dist/draw_open_layer.umd.js" ></script>
+<script src="/views/main.js" id="mainViewJs" data-name="" type="module"></script>
+
+</body>
+</html>

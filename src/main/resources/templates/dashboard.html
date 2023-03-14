@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <div th:replace="common/head :: head"></div>
+        <title>Dashboard</title>
+    </head>
+<body>
+
+<script th:inline="javascript">
+    const token = /*[[${_csrf.token}]]*/;
+    const header = /*[[${_csrf.headerName}]]*/;
+    const userInfo = /*[[${#authentication.principal}]]*/;
+    //console.log("userInfo:" + JSON.stringify(userInfo));
+</script>
+<script src="/models/api-wrapper.js"></script>
+<script src="/models/powerBuyingService.js"></script>
+<script src="/views/dashboard/db_logic.js"></script>
+<script src="/views/dashboard/db_app.js"></script>
+<script src="/views/main.js" type="module"></script>
+</body>
+</html>

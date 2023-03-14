@@ -1,0 +1,13 @@
+<th:block th:fragment="head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <link rel="stylesheet" href="/assets/webix/webix.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" type="text/css">
+    <script src="/assets/webix/webix.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/assets/webix/main.css" type="text/css">
+
+</th:block>

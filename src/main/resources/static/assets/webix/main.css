@@ -1,0 +1,153 @@
+/* custom font */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500&display=swap');
+
+h1, h2, h3, h4, h5, h6, p, a, span, pre, td, tr, div, button, input{
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.webix_chart .webix_chart_legend_item, .webix_chart .webix_canvas_text, .webix_chart .webix_axis_title_x, .webix_chart .webix_axis_title_y {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.webix_control input, .webix_control button, .webix_control textarea, .webix_el_label, .webix_inp_label, .webix_inp_top_label, .webix_inp_bottom_label {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* Login CSS*/
+.mc_login {
+  background: url("../image/main/green_energy.jpg");
+  background-size: cover;
+}
+
+.mc_login_form {
+  opacity: 0.9;
+  border-radius: 5px;
+  background-color: #00d1b2;
+}
+
+.webix_toolbar .webix_badge {
+  border: 2px solid #FFFFFF;
+  box-sizing: content-box;
+  background-color: #FF8C4C;
+  line-height: 16px;
+  min-width: auto;
+  padding: 0;
+  height: 16px;
+  width: 16px; }
+
+.webix_toolbar.greenHeader {
+  background: rgb(181, 241, 204);
+  border-color: rgb(181, 241, 204); }
+.webix_toolbar.greenHeader .webix_view > .webix_template {
+  background-color: rgb(181, 241, 204); }
+
+
+.webix_toolbar.darkHeader {
+  background: #565B67;
+  border-color: #565B67; }
+  .webix_toolbar.darkHeader .webix_view > .webix_template {
+    background-color: #565B67; }
+
+.webix_sidebar.webix_dark.darkSidebar {
+  background-color:#4A4E58;
+  border-color: #4A4E58; }
+
+.darkSidebar .webix_tree_item .webix_sidebar_icon {
+  color: #fff; }
+
+.webix_toolbar .user {
+  cursor: pointer; }
+  .webix_toolbar .user .webix_template {
+    padding: 0;
+    display: flex; }
+
+.webix_toolbar .userInner {
+  display: flex;
+  align-items: center; }
+
+.webix_toolbar .userAvatar {
+  width: 44px;
+  height: 44px;
+  position: relative;
+  margin-right: 8px; }
+
+.webix_toolbar .userImage {
+  display: block;
+  border-radius: 50%;
+  position: relative;
+  width: 44px;
+  height: 44px; }
+
+.webix_toolbar .userName {
+  display: flex;
+  align-items: center;
+  user-select: none; }
+  .webix_toolbar .userName .mdi-menu-down {
+    color: #94A1B3; }
+
+.navy {
+  background-color: rgba(28, 161, 193, 0.5); }
+  .navy > span {
+    background-color: #1CA1C1; }
+
+.grass {
+  background-color: rgba(85, 205, 151, 0.5); }
+  .grass > span {
+    background-color: #55CD97; }
+
+.yellow {
+  background-color: rgba(253, 191, 76, 0.5); }
+  .yellow > span {
+    background-color: #FDBF4C; }
+
+.purple {
+  background-color: rgba(134, 100, 198, 0.5); }
+  .purple > span {
+    background-color: #8664C6; }
+
+/*.red {
+  background-color: rgba(255, 92, 76, 0.5); }
+  .red > span {
+    background-color: #FF5C4C; }*/
+
+/*.green {
+  background-color: rgba(72, 173, 131, 0.5); }
+  .green > span {
+    background-color: #48AD83; }*/
+
+.blue {
+  background-color: rgba(28, 114, 193, 0.5); }
+  .blue > span {
+    background-color: #1C72C1; }
+
+.pointer {
+  cursor: pointer; }
+
+.bgWhite {
+  background: #fff; }
+
+.bgLight {
+  background: #dadee0; }
+
+.flex {
+  display: flex; }
+
+.strong {
+  font-weight: 500; }
+
+.ellipsis {
+  overflow: hidden;
+  display: block;
+  text-overflow: ellipsis;
+  width: 100%; }
+
+.sign {
+  color: #94A1B3;
+  margin-right: 8px;
+}
+
+.ctrlTitle {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1b88a2;
+    padding-left: 10px;
+}

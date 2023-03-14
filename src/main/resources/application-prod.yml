@@ -1,0 +1,41 @@
+# ===============================
+# = For AWS RDS Mysql
+# ===============================
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://db-emblock-my.cl6vjh1rhpas.ap-northeast-2.rds.amazonaws.com/rems?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    username: emblock
+    password: emblock!234%
+    hikari:
+      pool-name: SpringBootJdbcHikariCP
+      connection-timeout: 10000
+      validation-timeout: 10000
+      idle-timeout: 600000
+      maximum-pool-size: 5
+      minimum-idle: 2
+      max-lifetime: 1800000
+
+
+# ===============================
+# = Logging
+# ===============================
+logging:
+  config: classpath:logback-prod.xml
+  level:
+    root: WARN
+
+log:
+  config:
+    path: logs
+    filename: rems4eg
+
+# ===============================
+# = ramda
+# ===============================
+ramda:
+  base-url: https://api.luniverse.io
+  contract-id: 1260071472616860260
+  access-key: yRH4yLpXmavhanihAzg5JiraxuhwYN6WCfLDUJ4EvuUJg63emiMypCQP8KmfCP7f
+  secret-key: XE6tAhQqXt5kQWFVcigRBPjaqmw2pjyVfhcbeGhFGhCHM2MysU7YV92jCXGkqw3484XiS8VFc3qssszWSsvfGh6JR28MfJHZH9cDqHLKU5xXztgfMiB2DzekKjZ78RYr
+  environment-id: 1666842943529636665

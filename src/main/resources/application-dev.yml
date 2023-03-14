@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://172.30.1.157:3306/mosti
+    username: embdev
+    password: emb!1234
+    hikari:
+      pool-name: SpringBootJdbcHikariCP
+      connection-timeout: 10000
+      validation-timeout: 10000
+      idle-timeout: 120000
+      maximum-pool-size: 2
+      minimum-idle: 1
+      max-lifetime: 580000
+
+  devtools:
+    livereload:
+      enabled: true
+  output:
+    ansi:
+      enabled: DETECT
+
+# ===============================
+# = Logging
+# ===============================
+logging:
+  config: classpath:logback-dev.xml
+  level:
+    root: INFO
+
+log:
+  config:
+    path: logs
+    filename: rems4eg
+
+# ===============================
+# = ramda
+# ===============================
+ramda:
+  base-url: https://api.luniverse.io
+  contract-id: 1260071472616860260
+  access-key: yRH4yLpXmavhanihAzg5JiraxuhwYN6WCfLDUJ4EvuUJg63emiMypCQP8KmfCP7f
+  secret-key: XE6tAhQqXt5kQWFVcigRBPjaqmw2pjyVfhcbeGhFGhCHM2MysU7YV92jCXGkqw3484XiS8VFc3qssszWSsvfGh6JR28MfJHZH9cDqHLKU5xXztgfMiB2DzekKjZ78RYr
+  environment-id: 1666842943529636665
+

@@ -1,0 +1,34 @@
+server:
+  port: 8390
+#  servlet:
+#    session:
+#      timeout: 1m
+#  reactive:
+#    session:
+#      timeout: 1m
+
+
+spring:
+  profiles:
+    active: dev # 디폴트 환경
+
+  # ===============================
+  # = Thymeleaf configurations
+  # ===============================
+  thymeleaf:
+    mode: HTML
+    cache: false
+    encoding: UTF-8
+    prefix: file:src/main/resources/templates/
+
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/
+      cache:
+        cache-control:
+          max-age: 0
+
+
+# BANNER
+banner:
+  location: classpath:banner.txt

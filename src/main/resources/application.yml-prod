@@ -1,0 +1,27 @@
+server:
+  port: 8390
+
+spring:
+  profiles:
+    active: prod # 디폴트 환경
+
+  # ===============================
+  # = Thymeleaf configurations
+  # ===============================
+  thymeleaf:
+    mode: HTML
+    cache: false
+    encoding: UTF-8
+    prefix: classpath:/templates/
+
+  web:
+    resources:
+      static-locations: classpath:/static/
+      cache:
+        cache-control:
+          max-age: 0
+
+
+# BANNER
+banner:
+  location: classpath:banner.txt
