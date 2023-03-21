@@ -1,5 +1,5 @@
 server:
-  port: 8390
+  port: 8889
 #  servlet:
 #    session:
 #      timeout: 1m
@@ -19,11 +19,11 @@ spring:
     mode: HTML
     cache: false
     encoding: UTF-8
-    prefix: file:src/main/resources/templates/
+    prefix: classpath:/templates/
 
   web:
     resources:
-      static-locations: file:src/main/resources/static/
+      static-locations: classpath:/static/
       cache:
         cache-control:
           max-age: 0
