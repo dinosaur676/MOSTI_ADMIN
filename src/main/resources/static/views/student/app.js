@@ -8,11 +8,10 @@ const gridMaster = {
     navigation:false,       //keyboard protect
     columns: [
         { id: "id", header: "ID", width: 80, hidden:true  },
-        { id: "userName", header: "이름", width: 100, sort:"string"},
-        { id: "loginId", header: "로그인아이디", width: 120, sort:"string"},
-        { id: "email", header: "이메일", width: 160, sort:"string", fillspace:true},
-        { id: "password", header: "암호", width: 100, sort:"string", hidden:true },
-        { id: "status", header: "상태", width: 80, hidden:true, css:{'text-align': 'center'} }
+        { id: "name", header: "이름", width: 100, sort:"string"},
+        { id: "studentId", header: "학번", width: 120, sort:"string"},
+        { id: "school", header: "학교", width: 160, sort:"string", fillspace:true},
+        { id: "major", header: "전공", width: 100, sort:"string", hidden:true },
     ],
     on: {
         onBeforeLoad: function () {
@@ -43,20 +42,11 @@ const formMaster = {
     view: "form", id: "frmMaster", scroll: true,
     elementsConfig: { labelWidth: 100, labelAlign: "right" },
     elements: [
-    	{ view: "text", name:"userId", label: "id", disabled:true },
-    	{ view: "text", name:"loginId", label: "로그인아이디",  invalidMessage:"로그인 아이디를 입력해주세요.", bottomLabel:"2자리 이상 입력해주세요." },
-        { view: "text", name: "userName",  label: "이름", invalidMessage:"이름을 입력해주세요." },
-        { view: "text", name: "email", type:"email",  label: "이메일", /*validate:webix.rules.isEmail, invalidMessage:"이메일을 입력해주세요."*/},
-        { view: "text", name: "password", type:"password",  label: "암호" },
-        {
-            view: "select", id: "type", name: "type",
-            label: "유형", value: 1,
-            options: [
-                { id: "S", value: "학생" },
-                { id: "B", value: "교직원" },
-                { id: "A", value: "관리자" }
-            ]
-        },
+    	{ view: "text", name:"id", label: "id", disabled:true },
+    	{ view: "text", name:"name", label: "이름",  invalidMessage:"이름을 입력해주세요."},
+        { view: "text", name: "studentId",  label: "학번", invalidMessage:"학번을 입력해주세요." },
+        { view: "text", name: "school", label: "학교" }, 
+        { view: "text", name: "major", label: "전공" },
         {
             view: "select", id: "status", name: "status", //required: true,
             label: "사용여부", value: 1,
@@ -80,7 +70,7 @@ const formMaster = {
                             ok: "Yes", cancel: "No",
                             text: "선택된 사용자를 삭제하시겠습니까?"
                         }).then(function () {
-                            logic.deleteUser(model);
+                            logic.deleteStudent(model);
                         })
                     }
                 },
@@ -89,13 +79,35 @@ const formMaster = {
                     click: function() {
                         var model = $$("frmMaster").getValues();
                         if($$("frmMaster").validate())
-                            logic.saveUser(model);
+                            logic.saveStudents(model);
                         //console.log(model);
 
                     }
                 }
             ]
-        }
+        },
+        { view: "button", label: "학생증 발급", type: "form", align: "right",
+        css:"webix_secondary",
+        click: function() {
+            {   
+                //조회한번하고 발급이력있으면 발급이력이 있습니다 진행하시겠습니까? 하고 물어봐야.. 
+                //title, text 조절 
+                
+                webix.modalbox({
+                    title:"학생증발급",
+                    buttons:["확인"],
+                    width:400,
+                    input: {
+                        required:true,
+                        placeholder:"Siamese, Maine Coon, Sphynx...",
+                      },
+                    callback:function(result){
+                      alert("Result "+result)
+                    }
+                  });
+            }}
+        },
+
     ],
     rules:{
         /*loginId: function (value){
@@ -149,7 +161,7 @@ const ctrlView = {
             view: "button", id: "btnSearch", value: "검색", width: 100, height: 40,
             click: function () {
                 var params = { name: $$("txtName").getValue() };
-                logic.selectUsers(params);
+                logic.selectStudents(params);
            }
         },
         {},
@@ -172,7 +184,7 @@ export const mainView = {
             cols: [
                 {
                     rows:[
-                        { template: "사용자 목록", height: 32, css:"ctrlTitle"},
+                        { template: "학생 목록", height: 32, css:"ctrlTitle"},
                         gridMaster
                     ]
                 },

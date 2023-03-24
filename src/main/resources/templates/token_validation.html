@@ -2,16 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<div th:replace="common/head :: head"></div>
-		<title>Login</title>
+		<title>학생증 발급 확인</title>
 	</head>
 	<body>
 <html>
 	<div>
 		<p th:if="${param.error}">
-			Invalid username or password.
-		</p>
-		<p th:if="${param.logout}">
-			You have been logged out.
+			미발급 사용자 입니다.
 		</p>
 	</div>
 </html>
@@ -20,7 +17,8 @@
   const parameterName = /*[[${_csrf.parameterName}]]*/;
   console.log("token:" + token);
 </script>
-
+<script src="/models/api-wrapper.js"></script>
+<script src="/models/issueService.js"></script>
 <script type="text/javascript">
 webix.ui({
     type:"wide",
@@ -32,18 +30,17 @@ webix.ui({
           {},
           {
             view:"form",
-            id:"login_form",
+            id:"valid_form",
             css: "mc_login_form",
             width:400,
             elements:[
-              { view:"label", label:"EMBLOCK", width:400},
+              { view:"label", label:"패스코드 확인", width:400},
               { view:"text", type:"hidden", label:"", name:parameterName, value:token, hidden:true },
-              { view:"text", label:"", name:"loginId", id:"loginId", height: 50, placeholder: "계정",required:true,invalidMessage:"계정을 입력해주세요."  },
-              { view:"text", type:"password", label:"", name:"password", height: 50, placeholder: "비밀번호" ,required:true,invalidMessage:"비밀번호를 입력해주세요." },
-              { view:"button", value:"로그인" , height: 50,
+              { view:"text", type:"password", label:"", name:"authKey", height: 50, placeholder: "비밀번호" ,required:true,invalidMessage:"비밀번호를 입력해주세요." },
+              { view:"button", value:"확인" , height: 50,
                 css: "",
                 click: function() {
-                  loginProcess();
+                  validProcess();
                 }
               }
             ]
@@ -55,17 +52,19 @@ webix.ui({
     ]
 });
 
-$$("login_form").elements["loginId"].focus();
+$$("valid_form").elements["authKey"].focus();
 
 webix.UIManager.addHotKey("enter", function(){
-	loginProcess();
+	validProcess();
 });
 
-function loginProcess() {
-	var form = $$('login_form')
-	if (form.validate()) {
-	 	webix.send("/page/login", form.getValues());
-	}
+function validProcess() {
+  var id = window.location.search
+  var params = $$("valid_form").getValues();
+  const promise = issueService.valid(id, params);
+  promise.then(function (result){
+    console.log('인증 확인');
+  })
 };
 
 </script>

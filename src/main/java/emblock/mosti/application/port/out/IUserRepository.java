@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IUserRepository {
     List<User> 목록조회();
+    List<User> 목록조회(int roleId);
     User 조회(String loginId);
     void 추가(User user);
     void 수정(User user);

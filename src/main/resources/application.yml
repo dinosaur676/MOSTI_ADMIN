@@ -29,6 +29,3 @@ spring:
           max-age: 0
 
 
-# BANNER
-banner:
-  location: classpath:banner.txt

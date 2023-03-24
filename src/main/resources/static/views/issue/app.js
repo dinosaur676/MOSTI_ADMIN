@@ -8,11 +8,10 @@ const gridMaster = {
     navigation:false,       //keyboard protect
     columns: [
         { id: "id", header: "ID", width: 80, hidden:true  },
-        { id: "userName", header: "이름", width: 100, sort:"string"},
-        { id: "loginId", header: "로그인아이디", width: 120, sort:"string"},
-        { id: "email", header: "이메일", width: 160, sort:"string", fillspace:true},
-        { id: "password", header: "암호", width: 100, sort:"string", hidden:true },
-        { id: "status", header: "상태", width: 80, hidden:true, css:{'text-align': 'center'} }
+        { id: "name", header: "이름", width: 100, sort:"string"},
+        { id: "studentId", header: "학번", width: 120, sort:"string"},
+        { id: "school", header: "학교", width: 160, sort:"string", fillspace:true},
+        { id: "major", header: "전공", width: 100, sort:"string", hidden:true },
     ],
     on: {
         onBeforeLoad: function () {
@@ -39,24 +38,61 @@ const gridMaster = {
     }
 };
 
+var qrImg = {};
+const popup_template= webix.ui({
+    view: "window",
+    id:"issue_popup",
+    autowidth:true,
+    height: 350,
+    close:true,
+    position:"center",
+    head:{
+        cols:[
+        {template:"학생증 발급", type:"header", borderless:true},
+        {view:"icon", icon:"wxi-close", tooltip:"Close window", click: function(){
+            popup_template.close();
+        }}
+        ]
+    },
+    body: {
+        rows: [
+            { view:"text", id:"authKey", type:"password", label:"", name:"password", height: 50, placeholder: "인증번호" ,required:true,invalidMessage:"비밀번호를 입력해주세요." },        
+            {
+                view: "button", id: "btnIssue", value: "발급", width: 100, height: 40,
+                click: function () {
+                    var model = $$("frmMaster").getValues();
+                    var authKey = $$("authKey").getValue()                
+                    logic.issueStudentId(model.id, {"authKey":authKey});
+                }
+            },
+            { 
+                id:"tmp", 
+                view:"template",
+                template:"<img src='#src#' class='fit_parent'></img>",
+                width:500,
+                autoheight:true
+              }
+            // {
+            //     view: "space", id: "qrImg"
+            //         data: {title: "Image One", src: "" , id: "qrImg"},
+            //         template: function (obj) {
+            //             // obj is a data record object
+            //             return '<img src="'+obj.src+'"/>'
+            //         }
+            // }
+            ] 
+    }
+})
+
 const formMaster = {
     view: "form", id: "frmMaster", scroll: true,
     elementsConfig: { labelWidth: 100, labelAlign: "right" },
     elements: [
-    	{ view: "text", name:"userId", label: "id", disabled:true },
-    	{ view: "text", name:"loginId", label: "로그인아이디",  invalidMessage:"로그인 아이디를 입력해주세요.", bottomLabel:"2자리 이상 입력해주세요." },
-        { view: "text", name: "userName",  label: "이름", invalidMessage:"이름을 입력해주세요." },
-        { view: "text", name: "email", type:"email",  label: "이메일", /*validate:webix.rules.isEmail, invalidMessage:"이메일을 입력해주세요."*/},
-        { view: "text", name: "password", type:"password",  label: "암호" },
-        {
-            view: "select", id: "type", name: "type",
-            label: "유형", value: 1,
-            options: [
-                { id: "S", value: "학생" },
-                { id: "B", value: "교직원" },
-                { id: "A", value: "관리자" }
-            ]
-        },
+    	{ view: "text", name:"id", label: "id", disabled:true },
+    	{ view: "text", name:"name", label: "이름",  readonly:true},
+        { view: "text", name: "studentId",  label: "학번", readonly:true },
+        { view: "text", name: "school", label: "학교", readonly:true }, 
+        { view: "text", name: "major", label: "전공", readonly:true },
         {
             view: "select", id: "status", name: "status", //required: true,
             label: "사용여부", value: 1,
@@ -66,35 +102,30 @@ const formMaster = {
             ]
         },
 
-        {
-            view: "toolbar", borderless: true, margin: 20,
-            cols:[
-                { gravity: 3 },
-                { view: "button", label: "삭제", type: "danger", width: 80,
-                    css:"webix_danger",
-                    click: function() {
-                        var model = $$("frmMaster").getValues();
-                        //console.log(model);
-                        webix.confirm({
-                            title: "사용자 삭제",
-                            ok: "Yes", cancel: "No",
-                            text: "선택된 사용자를 삭제하시겠습니까?"
-                        }).then(function () {
-                            logic.deleteUser(model);
-                        })
-                    }
-                },
-                { view: "button", label: "저장", type: "form", width: 80, align: "right",
-                    css:"webix_primary",
-                    click: function() {
-                        var model = $$("frmMaster").getValues();
-                        if($$("frmMaster").validate())
-                            logic.saveUser(model);
-                        //console.log(model);
-
-                    }
-                }
-            ]
+        { 
+            view: "button", value: "학생증 발급", align: "right", css:"webix_secondary",
+           
+            click: function() {
+                popup_template.show()
+                //$$('issue_popup').show();
+                // webix.ui({
+                //     view:"window",
+                //     id:"issue_popup",
+                //     autowidth:true,
+                //     height: 350,
+                //     close:true,
+                //     position:"center",
+                //     head:{
+                //         cols:[
+                //         {template:"학생증 발급", type:"header", borderless:true},
+                //         {view:"icon", icon:"wxi-close", tooltip:"Close window", click: function(){
+                //             popup_template.close();
+                //         }}
+                //         ]
+                //     },
+                //     body: popup_template
+                // }).show();
+            }
         }
     ],
     rules:{
@@ -149,17 +180,9 @@ const ctrlView = {
             view: "button", id: "btnSearch", value: "검색", width: 100, height: 40,
             click: function () {
                 var params = { name: $$("txtName").getValue() };
-                logic.selectUsers(params);
+                logic.selectStudents(params);
            }
         },
-        {},
-        {
-            view: "button", value: "새 사용자", width: 150, height: 40,
-            css: "embTxBtn",
-            click: function () {
-                logic.makeNewForm();
-            }
-        }
     ]
 };
 
@@ -167,12 +190,13 @@ export const mainView = {
     id: "mainView",
     type: "space",
     rows: [
-        ctrlView,
+        ctrlView, 
+        // popup_template, 
         {
             cols: [
                 {
                     rows:[
-                        { template: "사용자 목록", height: 32, css:"ctrlTitle"},
+                        { template: "학생 목록", height: 32, css:"ctrlTitle"},
                         gridMaster
                     ]
                 },
@@ -182,8 +206,8 @@ export const mainView = {
                         { template: "사용자 정보", height: 32, css:"ctrlTitle" },
                         formMaster
                     ]
-                }
+                },
             ]
-        }
+        },
     ]
 };

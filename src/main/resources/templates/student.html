@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <div th:replace="common/head :: head"></div>
+        <title>학생증 등록</title>
+    </head>
+<body>
+
+<script th:inline="javascript">
+    const token = /*[[${_csrf.token}]]*/;
+    const header = /*[[${_csrf.headerName}]]*/;
+    const userInfo = /*[[${#authentication.principal}]]*/;
+</script>
+<script src="/models/api-wrapper.js"></script>
+<script src="/models/studentService.js"></script>
+<!--<script src="/views/user/logic.js"></script>
+<script src="/views/main/app.js" type="module"></script>-->
+<script src="/views/main.js" id="mainViewJs" data-name="student" type="module"></script>
+</body>
+</html>

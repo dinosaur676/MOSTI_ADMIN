@@ -44,6 +44,7 @@ public class EmbAuthenticationProvider implements AuthenticationProvider {
         log.debug("authentication.getDetails(): " + details.getClass());
         try {
             UserDetails authUser = this.authUserService.loadUserByUsername(username);
+            
             if (authUser == null) {
                 throw new BadCredentialsException("Invalid User");
             }

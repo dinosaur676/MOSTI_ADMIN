@@ -3,6 +3,8 @@ package emblock.mosti.adapter.rdb.sql;
 public class UserRepositorySql {
     public static final String SQL_목록조회 = "SELECT * FROM user";
     public static final String SQL_조회 = "SELECT * FROM user WHERE login_id = ?";
+    public static final String SQL_역할별사용자목록조회 = "SELECT * FROM user WHERE role_id = ?";
+
     public static final String SQL_추가 = """
         insert into user (user_id, login_id, password, user_name, email, address, phone, cell_phone, type, status, role_id,  created_on,
                   updated_on)

@@ -25,4 +25,5 @@ public class UserRowMapper implements RowMapper<User> {
                 .roleId(rs.getInt("role_id")).build()
                 ;
     }
+    
 }
