@@ -14,6 +14,7 @@ import emblock.framework.dto.ResponseDto;
 import emblock.framework.dto.SuccessRespDto;
 import emblock.mosti.application.dto.request.issue.TokenAccessAuthCreateReqDto;
 import emblock.mosti.application.dto.request.issue.TokenAccessAuthValidReqDto;
+import emblock.mosti.application.dto.response.StudentRespDto;
 import emblock.mosti.application.dto.response.TokenAccessAuthRespDto;
 import emblock.mosti.application.port.in.IIssueService;
 
@@ -32,10 +33,10 @@ public class IssueController {
     }
 
     //학번, 이름, 패스코드로 확인
-    @PostMapping("/valid")
+    @PostMapping("/valid/{id}")
     public ResponseDto 검증(Model model, @RequestBody TokenAccessAuthValidReqDto tokenAccessAuthValidReqDto, Principal principal, @PathVariable String id){
-        this.iissueService.검증(id, tokenAccessAuthValidReqDto);
-        return new SuccessRespDto("사용자 조회가 성공적으로 완료되었습니다.");
+        String name = this.iissueService.검증(id, tokenAccessAuthValidReqDto);
+        return new SuccessRespDto(name, "사용자 조회가 성공적으로 완료되었습니다.");
     }
 
 }

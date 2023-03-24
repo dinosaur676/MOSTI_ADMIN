@@ -59,12 +59,35 @@ webix.UIManager.addHotKey("enter", function(){
 });
 
 function validProcess() {
-  var id = window.location.search
-  var params = $$("valid_form").getValues();
-  const promise = issueService.valid(id, params);
-  promise.then(function (result){
-    console.log('인증 확인');
-  })
+//   var id = window.location.search.split('=')[-1]
+    var urlParams = new URL(window.location.href).searchParams;
+    var id = urlParams.get('id');
+    var params = $$("valid_form").getValues();
+    const promise = issueService.valid(id, params);
+    promise.then(function (result){
+        console.log(result);
+        if(result.status == '90'){
+            webix.modalbox({
+                title:"Custom title",
+                buttons:["Yes"],
+                width:400,
+                text:"사용자를 찾지 못했습니다.",
+                callback:function(result){
+                    alert("Result "+result.info)
+                }
+            });
+        }else{
+            webix.modalbox({
+                title:"Custom title",
+                buttons:["Yes"],
+                width:400,
+                text:result.data+"님 토큰 인증이 완료되었습니다.",
+                callback:function(result){
+                    alert("다음 안내 url... ")
+                }
+            });
+        }
+    });
 };
 
 </script>

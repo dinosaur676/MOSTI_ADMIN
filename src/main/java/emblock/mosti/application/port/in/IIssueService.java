@@ -10,7 +10,7 @@ import emblock.mosti.application.dto.request.issue.TokenAccessAuthValidReqDto;
 import emblock.mosti.application.dto.response.TokenAccessAuthRespDto;
 
 public interface IIssueService {
-    public Student 검증(String studentId, TokenAccessAuthValidReqDto tokenAccessAuthValidReqDto);
+    public String 검증(String studentId, TokenAccessAuthValidReqDto tokenAccessAuthValidReqDto);
     @Transactional
     public TokenAccessAuthRespDto 발급(String studentId, TokenAccessAuthCreateReqDto tokenAccessAuthCreateReqDto);
 }

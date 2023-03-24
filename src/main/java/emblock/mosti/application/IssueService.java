@@ -16,6 +16,7 @@ import emblock.mosti.application.domain.Student;
 import emblock.mosti.application.domain.TokenAccessAuth;
 import emblock.mosti.application.dto.request.issue.TokenAccessAuthCreateReqDto;
 import emblock.mosti.application.dto.request.issue.TokenAccessAuthValidReqDto;
+import emblock.mosti.application.dto.response.StudentRespDto;
 import emblock.mosti.application.dto.response.TokenAccessAuthRespDto;
 import emblock.mosti.application.port.in.IIssueService;
 import emblock.mosti.application.port.out.IStudentRepository;
@@ -43,14 +44,16 @@ public class IssueService implements IIssueService {
     private IStudentRepository studentRepository;
 
     @Override
-    public Student 검증(String studentId, TokenAccessAuthValidReqDto tokenAccessAuthValidReqDto) {
+    public String 검증(String studentId, TokenAccessAuthValidReqDto tokenAccessAuthValidReqDto) {
         TokenAccessAuth tokenAccessAuth = this.tokenAccessAuthRepository.조회(Long.valueOf(studentId));
         //비번확인
         if(!tokenAccessAuth.getAuthKey().equals(tokenAccessAuthValidReqDto.authKey())){
             throw new ApplicationException("조회되지 않습니다.");
         }
         //학생 조회
-        return studentRepository.조회(Long.valueOf(studentId));
+        Student student = studentRepository.조회(Long.valueOf(studentId));
+        // StudentRespDto studentRespDto = StudentRespDto.생성(student);
+        return student.getName();
     }
 
     @Override
