@@ -62,15 +62,16 @@ export const logic = {
                 //const json = resp.json();
                 console.log(json);
                 if (json.status == "00") {
-                    console.log(json.data);
-                    const qrImg = document.createElement("img");
-                    qrImg.src = json.data.qrcode
+                    const qrImg = {align:"middle,center", template:`<img src="${json.data.qrcode}"/>`, view:"template", width:300}
 
-                    document.getElementById("tmp").appendChild(qrImg);
+                    //document.getElementById("tmp").appendChild(qrImg);
+
+                    $$('body').addView(qrImg,$$('body').index($$('btnIssue')) +1)
                     //$$("qrimage").getBody().setValues({src: json.data.qrcode});
                     // document.body.appendChild(qrImg)
                     //$$("tmp").appendChild(qrImg)
                     webix.message({ text: '해당 링크로 접속해 발급을 확인하세요.', expire: 1000 });
+
                     // const params = { name: $$("txtName").getValue() };
                     // logic.selectStudents(params);
                 } else {

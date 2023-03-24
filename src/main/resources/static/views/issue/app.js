@@ -30,7 +30,6 @@ const gridMaster = {
         onItemClick: function (id, e, trg) {
             //console.log(id);
             $$("status").refresh();
-
         },
         onSelectChange: function() {
 
@@ -39,10 +38,10 @@ const gridMaster = {
 };
 
 var qrImg = {};
-const popup_template= webix.ui({
+const popup_template = {
     view: "window",
     id:"issue_popup",
-    autowidth:true,
+    //autowidth:true,
     height: 350,
     close:true,
     position:"center",
@@ -50,28 +49,29 @@ const popup_template= webix.ui({
         cols:[
         {template:"학생증 발급", type:"header", borderless:true},
         {view:"icon", icon:"wxi-close", tooltip:"Close window", click: function(){
-            popup_template.close();
-        }}
+            $$('issue_popup').close();
+        }},
         ]
     },
     body: {
+        id:'body',
         rows: [
             { view:"text", id:"authKey", type:"password", label:"", name:"password", height: 50, placeholder: "인증번호" ,required:true,invalidMessage:"비밀번호를 입력해주세요." },        
             {
-                view: "button", id: "btnIssue", value: "발급", width: 100, height: 40,
+                view: "button", id: "btnIssue", value: "발급", height: 40, width: 300,
                 click: function () {
                     var model = $$("frmMaster").getValues();
                     var authKey = $$("authKey").getValue()                
                     logic.issueStudentId(model.id, {"authKey":authKey});
                 }
             },
-            { 
+            /*{
                 id:"tmp", 
                 view:"template",
                 template:"<img src='#src#' class='fit_parent'></img>",
                 width:500,
                 autoheight:true
-              }
+              }*/
             // {
             //     view: "space", id: "qrImg"
             //         data: {title: "Image One", src: "" , id: "qrImg"},
@@ -82,7 +82,7 @@ const popup_template= webix.ui({
             // }
             ] 
     }
-})
+}
 
 const formMaster = {
     view: "form", id: "frmMaster", scroll: true,
@@ -104,9 +104,8 @@ const formMaster = {
 
         { 
             view: "button", value: "학생증 발급", align: "right", css:"webix_secondary",
-           
             click: function() {
-                popup_template.show()
+                webix.ui(popup_template).show()
                 //$$('issue_popup').show();
                 // webix.ui({
                 //     view:"window",
