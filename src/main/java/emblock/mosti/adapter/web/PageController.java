@@ -51,12 +51,30 @@ public class PageController {
         return "redirect:/page/login?logout=true";
     }
 
+    @GetMapping("/token-validation")
+    String tokenValidationView(Model model){
+        //log.debug(LogHelper.printEntity(principal))
+        return "token_validation";
+    }
 
     @GetMapping("/user")
     String userView(Model model, Principal principal){
         //log.debug(LogHelper.printEntity(principal))
         return "user";
     }
+
+    @GetMapping("/issue")
+    String issueView(Model model, Principal principal){
+        //log.debug(LogHelper.printEntity(principal))
+        return "issue";
+    }
+
+    @GetMapping("/student")
+    String studentView(Model model, Principal principal){
+        //log.debug(LogHelper.printEntity(principal))
+        return "student";
+    }
+
 
     @GetMapping("/power-generation")
     String powerGenView(Model model, Principal principal){

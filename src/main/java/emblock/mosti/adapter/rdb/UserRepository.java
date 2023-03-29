@@ -30,6 +30,11 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
+    public List<User> 목록조회(int roleId) {
+        return this.jdbcQuery.목록조회(UserRepositorySql.SQL_역할별사용자목록조회, roleId);
+    }
+
+    @Override
     public User 조회(String loginId) {
         return this.jdbcQuery.조회(UserRepositorySql.SQL_조회, loginId);
     }

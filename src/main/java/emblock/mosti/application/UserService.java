@@ -1,6 +1,6 @@
 package emblock.mosti.application;
 
-import emblock.mosti.adapter.ramda.NftGateway;
+// import emblock.mosti.adapter.ramda.NftGateway;
 import emblock.mosti.adapter.ramda.dto.response.RamdaMapResponseDto;
 import emblock.mosti.application.dto.request.user.UserCreateReqDto;
 import emblock.mosti.application.dto.request.user.UserUpdateReqDto;
@@ -24,14 +24,15 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
-    private final NftGateway nftGateway;
+    // private final NftGateway nftGateway;
 
 
-    public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher, NftGateway nftGateway) {
+    // public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher, NftGateway nftGateway) {
+        public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
-        this.nftGateway = nftGateway;
+        // this.nftGateway = nftGateway;
     }
 
     @Override
@@ -64,10 +65,11 @@ public class UserService implements IUserService {
     public RamdaMapResponseDto 지갑정보생성및수정(long userId) {
         Map<String,String> param = new ConcurrentHashMap<>();
         param.put("userId",String.valueOf(userId));
-        RamdaMapResponseDto respDto =
-                this.nftGateway.requestWithPostWebClient(NftGateway.API.CREATE_WALLET, RamdaMapResponseDto.class,param);
-        this.userRepository.지갑정보수정(respDto.getData().get("walletId"),String.valueOf(respDto.getData().get("address")),userId);
-        return respDto;
+        // RamdaMapResponseDto respDto =
+        //         this.nftGateway.requestWithPostWebClient(NftGateway.API.CREATE_WALLET, RamdaMapResponseDto.class,param);
+        // this.userRepository.지갑정보수정(respDto.getData().get("walletId"),String.valueOf(respDto.getData().get("address")),userId);
+        // return respDto;
+        return null;
     }
 
 }

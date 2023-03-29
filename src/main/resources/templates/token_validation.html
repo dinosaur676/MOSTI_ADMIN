@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<div th:replace="common/head :: head"></div>
+		<title>학생증 발급 확인</title>
+	</head>
+	<body>
+<html>
+	<div>
+		<p th:if="${param.error}">
+			미발급 사용자 입니다.
+		</p>
+	</div>
+</html>
+<script th:inline="javascript">
+  const token = /*[[${_csrf.token}]]*/;
+  const parameterName = /*[[${_csrf.parameterName}]]*/;
+  console.log("token:" + token);
+</script>
+<script src="/models/api-wrapper.js"></script>
+<script src="/models/issueService.js"></script>
+<script type="text/javascript">
+webix.ui({
+    type:"wide",
+    css: "mc_login",
+    cols: [
+      {},
+      {
+        rows: [
+          {},
+          {
+            view:"form",
+            id:"valid_form",
+            css: "mc_login_form",
+            width:400,
+            elements:[
+              { view:"label", label:"패스코드 확인", width:400},
+              { view:"text", type:"hidden", label:"", name:parameterName, value:token, hidden:true },
+              { view:"text", type:"password", label:"", name:"authKey", height: 50, placeholder: "비밀번호" ,required:true,invalidMessage:"비밀번호를 입력해주세요." },
+              { view:"button", value:"확인" , height: 50,
+                css: "",
+                click: function() {
+                  validProcess();
+                }
+              }
+            ]
+          },
+          {}
+        ]
+      },
+      {}
+    ]
+});
+
+$$("valid_form").elements["authKey"].focus();
+
+webix.UIManager.addHotKey("enter", function(){
+	validProcess();
+});
+
+function validProcess() {
+//   var id = window.location.search.split('=')[-1]
+    var urlParams = new URL(window.location.href).searchParams;
+    var id = urlParams.get('id');
+    var params = $$("valid_form").getValues();
+    const promise = issueService.valid(id, params);
+    promise.then(function (result){
+        console.log(result);
+        if(result.status == '90'){
+            webix.modalbox({
+                title:"Custom title",
+                buttons:["Yes"],
+                width:400,
+                text:"사용자를 찾지 못했습니다.",
+                callback:function(result){
+                    alert("Result "+result.info)
+                }
+            });
+        }else{
+            webix.modalbox({
+                title:"Custom title",
+                buttons:["Yes"],
+                width:400,
+                text:result.data+"님 토큰 인증이 완료되었습니다.",
+                callback:function(result){
+                    alert("다음 안내 url... ")
+                }
+            });
+        }
+    });
+};
+
+</script>
+
+</body>
+</html>

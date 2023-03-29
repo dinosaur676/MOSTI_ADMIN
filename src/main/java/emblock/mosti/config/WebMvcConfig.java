@@ -23,6 +23,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(menuRoleCheckInterceptor)
                 .addPathPatterns("/page/**")
-                .excludePathPatterns("/page/login","/page/logout");
+                .excludePathPatterns("/page/login","/page/logout", "/page/token-validation");
     }
 }

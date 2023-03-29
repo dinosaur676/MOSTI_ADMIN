@@ -22,6 +22,8 @@ public class SecurityConfig {
     private static final Logger log =  LoggerFactory.getLogger(SecurityConfig.class);
     private static final String DEFAULT_PAGE= "/page/user";
     private static final String LOGIN_PAGE= "/page/login";
+    private static final String ISSUE_PAGE= "/page/token-validation";
+    private static final String VALID_API= "/api/issue/valid/**";
 
     private final UserDetailsService userDetailsService;
 
@@ -56,8 +58,10 @@ public class SecurityConfig {
         http
             .authorizeRequests()
             // 페이지 권한 설정
+            
+            .antMatchers("/api/admin-users/**").permitAll()
             .antMatchers("/assets/**", "/models/**", "/views/**").permitAll()
-            .antMatchers(LOGIN_PAGE, "/page/home").permitAll()
+            .antMatchers(ISSUE_PAGE, VALID_API, LOGIN_PAGE, "/page/home").permitAll()
             .anyRequest().authenticated()
         .and() // 로그인 설정
         .formLogin()
