@@ -35,6 +35,15 @@ log:
     path: logs
     filename: rems4eg
 
+# ===============================
+# = blockchain gateway
+# ===============================
+gateway:
+  base-url: http://172.30.1.174:8545
+  # contract-id: 1260071472616860260
+  # access-key: yRH4yLpXmavhanihAzg5JiraxuhwYN6WCfLDUJ4EvuUJg63emiMypCQP8KmfCP7f
+  # secret-key: XE6tAhQqXt5kQWFVcigRBPjaqmw2pjyVfhcbeGhFGhCHM2MysU7YV92jCXGkqw3484XiS8VFc3qssszWSsvfGh6JR28MfJHZH9cDqHLKU5xXztgfMiB2DzekKjZ78RYr
+  # environment-id: 1666842943529636665
 
 # ===============================
 # = ramda
