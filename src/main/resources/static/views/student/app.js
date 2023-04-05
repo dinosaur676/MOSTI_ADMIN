@@ -7,7 +7,7 @@ const gridMaster = {
     //autowidth: true,
     navigation:false,       //keyboard protect
     columns: [
-        { id: "id", header: "ID", width: 80, hidden:true  },
+        { id: "userId", header: "ID", width: 80, hidden:true  },
         { id: "name", header: "이름", width: 100, sort:"string"},
         { id: "studentId", header: "학번", width: 120, sort:"string"},
         { id: "school", header: "학교", width: 160, sort:"string", fillspace:true},
@@ -27,7 +27,7 @@ const gridMaster = {
             $$("frmMaster").clearValidation();
             //console.log(cell);
         },
-        onItemClick: function (id, e, trg) {
+        onItemClick: function (userId, e, trg) {
             //console.log(id);
             $$("status").refresh();
 
@@ -42,7 +42,7 @@ const formMaster = {
     view: "form", id: "frmMaster", scroll: true,
     elementsConfig: { labelWidth: 100, labelAlign: "right" },
     elements: [
-    	{ view: "text", name:"id", label: "id", disabled:true },
+    	{ view: "text", name:"userId", label: "id", disabled:true },
     	{ view: "text", name:"name", label: "이름",  invalidMessage:"이름을 입력해주세요."},
         { view: "text", name: "studentId",  label: "학번", invalidMessage:"학번을 입력해주세요." },
         { view: "text", name: "school", label: "학교" }, 

@@ -29,8 +29,8 @@ public class StudentRepository implements IStudentRepository {
     }
 
     @Override
-    public Student 조회(long id) {
-        return this.jdbcQuery.조회(StudentRepositorySql.SQL_조회, id);
+    public Student 조회(long userId) {
+        return this.jdbcQuery.조회(StudentRepositorySql.SQL_조회, userId);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class StudentRepository implements IStudentRepository {
     @Override
     public void 추가(Student student) {
         this.jdbcCommand.실행(StudentRepositorySql.SQL_추가
-                , student.getId(), student.getName(), student.getStudentId()
+                , student.getUserId(), student.getName(), student.getStudentId()
                 , student.getSchool(), student.getMajor()
                 , student.getCreatedOn(), student.getUpdatedOn());
 
@@ -50,7 +50,7 @@ public class StudentRepository implements IStudentRepository {
     @Override
     public void 수정(Student student) {
         this.jdbcCommand.실행(StudentRepositorySql.SQL_수정
-                , student.getId(), student.getName()
+                , student.getUserId(), student.getName()
                 , student.getSchool(), student.getMajor()
                 , student.getUpdatedOn());
 

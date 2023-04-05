@@ -36,6 +36,7 @@ public class StudentController {
     //A 2 : admin
     //B 0 : 교직원
     //S 1 : 학생 
+    
     @GetMapping
     public ResponseDto 목록조회(Model model, Principal principal){
         List<StudentRespDto> studentList = this.studentService.목록조회();
@@ -45,9 +46,9 @@ public class StudentController {
         return new SuccessRespDto(studentList, "사용자 조회가 성공적으로 완료되었습니다.");
     }
 
-    @GetMapping("/{id}")
-    public ResponseDto 조회(Model model, Principal principal, @PathVariable String id){
-        StudentRespDto studentRespDto = this.studentService.조회(id);
+    @GetMapping("/{userId}")
+    public ResponseDto 조회(Model model, Principal principal, @PathVariable String userId){
+        StudentRespDto studentRespDto = this.studentService.조회(userId);
         if(studentRespDto == null) {
             throw new EmptyListException("NO DATA");
         }
@@ -61,9 +62,9 @@ public class StudentController {
         return new SuccessRespDto("사용자 등록이 성공적으로 완료되었습니다.");
     }
 
-    @PutMapping("/{id}")
-    public ResponseDto 수정(@Valid @RequestBody StudentUpdateReqDto studentUpdateReqDto, Principal principal, @PathVariable String id){
-        this.studentService.수정(id, studentUpdateReqDto);
+    @PutMapping("/{userId}")
+    public ResponseDto 수정(@Valid @RequestBody StudentUpdateReqDto studentUpdateReqDto, Principal principal, @PathVariable String userId){
+        this.studentService.수정(userId, studentUpdateReqDto);
         return new SuccessRespDto("사용자 수정이 성공적으로 완료되었습니다.");
     }
 

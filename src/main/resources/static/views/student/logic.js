@@ -1,7 +1,7 @@
 export const logic = {
     init: function(){
         // ties between views
-        $$("frmMaster").setValues({ id: ""});
+        $$("frmMaster").setValues({ userId: ""});
         $$("frmMaster").bind($$("dtMaster"));
         this.selectStudents();
         //this.selectUsers();
@@ -9,7 +9,7 @@ export const logic = {
 
     makeNewForm: function() {
         $$("frmMaster").setValues({
-            id: "",
+            userId: "",
             name: "",
             studentId: "",
             school: "",
@@ -64,7 +64,7 @@ export const logic = {
     saveStudents: function(model) {
         console.log(model);
         let promise;
-        if (model.id == "")
+        if (model.userId == "")
             promise = studentService.add(model);
         else
             promise = studentService.modify(model);
