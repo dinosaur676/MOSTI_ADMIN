@@ -7,9 +7,9 @@ const studentService = {
         //return webix.ajax().get(this.apiUrl.base, params);
         return apiWrapper.get(this.endpoint.base, params);
     },
-    find: function(id) {
+    find: function(userId) {
         //return webix.ajax().get(this.apiUrl.base + '/' + id);
-        return apiWrapper.get(this.endpoint.base + '/' + id);
+        return apiWrapper.get(this.endpoint.base + '/' + userId);
     },
     add: function (model) {
         //return webix.ajax().headers(ajaxOption).post(this.apiUrl.base, JSON.stringify(model));
