@@ -1,15 +1,13 @@
-package emblock.mosti.application.port.out;
+package emblock.mosti.application.port.in;
 
 import emblock.mosti.adapter.blockchain.ContractType;
 import emblock.mosti.application.domain.TokenInfo;
 import emblock.mosti.application.domain.TokenType;
 import emblock.mosti.application.domain.UserToken;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-public interface ITokenControlRepository {
-
+public interface ITokenControlService {
     TokenInfo 발행한토큰조회(ContractType type, long tokenId);
     List<TokenInfo> 발행한토큰목록조회(String tokenOwner);
 
@@ -24,5 +22,4 @@ public interface ITokenControlRepository {
     List<TokenType> 토큰타입조회();
     void 토큰타입추가(String description);
     void 토큰타입수정(int typeId, String description);
-
 }

@@ -9,7 +9,7 @@ import emblock.mosti.application.domain.common.CommonEnum;
 
 public class Student extends BaseDomain{
     private long userId;
-    private String name;
+    private String userName;
     private String studentId;
     private String school;
     private String major;
@@ -18,14 +18,14 @@ public class Student extends BaseDomain{
         return userId;
     }
 
-    public String getName(){
-        return name;
+    public String getUserName(){
+        return userName;
     }
 
     public String getStudentId(){
         return studentId;
     }
-    
+
     public String getSchool(){
         return school;
     }
@@ -34,27 +34,36 @@ public class Student extends BaseDomain{
         return major;
     }
 
-    private Student(String name, String studentId, String school, String major){
+    private Student(String userName, String studentId, String school, String major){
         this.userId = SnowflakeIdGenerator.genId();
-        this.name = name;
+        this.userName = userName;
         this.studentId = studentId;
         this.school = school;
         this.major = major;
         super.현재일시설정();
     }
 
-    private Student(long userId, String name, String school, String major){
+    private Student(long userId, String userName, String studentId, String school, String major){
         this.userId = userId;
-        this.name = name;
+        this.userName = userName;
+        this.studentId = studentId;
+        this.school = school;
+        this.major = major;
+        super.현재일시설정();
+    }
+
+    private Student(long userId, String userName, String school, String major){
+        this.userId = userId;
+        this.userName = userName;
         // this.studentId = studentId;
         this.school = school;
         this.major = major;
         super.수정일시설정();
     }
 
-    private Student(long userId, String name, String studentId, String school, String major, Timestamp createdOn, Timestamp updatedOn){
+    private Student(long userId, String userName, String studentId, String school, String major, Timestamp createdOn, Timestamp updatedOn){
         this.userId = userId;
-        this.name = name;
+        this.userName = userName;
         this.studentId = studentId;
         this.school = school;
         this.major = major;
@@ -63,7 +72,7 @@ public class Student extends BaseDomain{
 
     public static final class Builder {
         private long userId;
-        private String name;
+        private String userName;
         private String studentId;
         private String school;
         private String major;
@@ -73,18 +82,18 @@ public class Student extends BaseDomain{
 
         private final CommonEnum.CrudType crudType;
 
-        public Builder(String name, String studentId, String school, String major) {
-            this.userId = SnowflakeIdGenerator.genId();
-            this.name = name;
+        public Builder(long userId, String userName, String studentId, String school, String major) {
+            this.userId = userId;
+            this.userName = userName;
             this.studentId = studentId;
             this.school = school;
             this.major = major;
             this.crudType = CommonEnum.CrudType.isCreate;
         }
 
-        public Builder(long userId, String name, String school, String major) {
+        public Builder(long userId, String userName, String school, String major) {
             this.userId = userId;
-            this.name = name;
+            this.userName = userName;
             this.school = school;
             this.major = major;
             this.crudType = CommonEnum.CrudType.isUpdate;
@@ -95,12 +104,12 @@ public class Student extends BaseDomain{
             this.crudType = CommonEnum.CrudType.isFind;
         }
 
-        public static Builder builder등록(String name, String studentId, String school, String major) {
-            return new Builder(name, studentId, school, major);
+        public static Builder builder등록(long userId, String userName, String studentId, String school, String major) {
+            return new Builder(userId, userName, studentId, school, major);
         }
 
-        public static Builder builder수정(long userId, String name, String school, String major) {
-            return new Builder(userId, name, school, major);
+        public static Builder builder수정(long userId, String userName, String school, String major) {
+            return new Builder(userId, userName, school, major);
         }
 
         public static Builder builder찾기(long userId) {
@@ -112,8 +121,8 @@ public class Student extends BaseDomain{
             return this;
         }
 
-        public Builder name(String val) {
-            name = val;
+        public Builder userName(String val) {
+            userName = val;
             return this;
         }
 
@@ -146,18 +155,18 @@ public class Student extends BaseDomain{
             return switch (this.crudType){
                 case isCreate -> {
                     Assert.notNull(userId, "필수값입니다.");
-                    Assert.notNull(name, "필수값입니다.");
+                    Assert.notNull(userName, "필수값입니다.");
                     Assert.notNull(studentId, "필수값입니다.");
                     Assert.notNull(school, "필수값입니다.");
                     Assert.notNull(major, "필수값입니다.");
-                    yield new Student(name, studentId, school, major);
+                    yield new Student(userId, userName, studentId, school, major);
                 }
 
                 case isUpdate -> {
-                    yield new Student(userId, name, school, major);
+                    yield new Student(userId, userName, school, major);
                 }
                 case isFind -> {
-                    yield  new Student(userId, name, studentId, school, major, createdOn, updatedOn);
+                    yield  new Student(userId, userName, studentId, school, major, createdOn, updatedOn);
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + this.crudType);
             };

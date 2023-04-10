@@ -1,7 +1,7 @@
 package emblock.mosti.adapter.rdb.sql;
 
 public class StudentRepositorySql {
-    public static final String SQL_목록조회 = "SELECT * FROM student";
+    public static final String SQL_목록조회 = "select * from student";
     public static final String SQL_조회 = "SELECT * FROM student WHERE user_id = ?";
 
     public static final String SQL_이름학번조회 = "SELECT * FROM student WHERE name = ? AND student_id = ?";

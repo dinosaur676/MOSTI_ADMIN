@@ -1,4 +1,27 @@
 import {logic} from "./logic.js"
+
+const searchType = ["사용자 목록", "학생 목록"]
+const logicFunction = [logic.selectUsers, logic.selectStudents]
+let index = 0;
+const arraySize = 2
+
+const gridColumns = [
+    [
+        { id: "userId", header: "ID", width: 80, hidden:true  },
+        { id: "userName", header: "이름", width: 100, sort:"string"},
+        { id: "loginId", header: "로그인아이디", width: 120, sort:"string"},
+        { id: "email", header: "이메일", width: 160, sort:"string", fillspace:true},
+        { id: "password", header: "암호", width: 100, sort:"string", hidden:true },
+        { id: "status", header: "상태", width: 80, hidden:true, css:{'text-align': 'center'} }
+    ],
+    [
+        { id: "userId", header: "ID", width: 80, hidden:true  },
+        { id: "userName", header: "이름", width: 100, sort:"string"},
+        { id: "studentId", header: "학번", width: 120, sort:"string"},
+        { id: "school", header: "학교", width: 160, sort:"string", fillspace:true},
+        { id: "major", header: "전공", width: 100, sort:"string", hidden:true },
+    ]
+]
 const gridMaster = {
     view: "datatable",
     id: "dtMaster",
@@ -6,13 +29,7 @@ const gridMaster = {
     headerRowHeight: 35,
     //autowidth: true,
     navigation:false,       //keyboard protect
-    columns: [
-        { id: "userId", header: "ID", width: 80, hidden:true  },
-        { id: "name", header: "이름", width: 100, sort:"string"},
-        { id: "studentId", header: "학번", width: 120, sort:"string"},
-        { id: "school", header: "학교", width: 160, sort:"string", fillspace:true},
-        { id: "major", header: "전공", width: 100, sort:"string", hidden:true },
-    ],
+    columns: gridColumns[index],
     on: {
         onBeforeLoad: function () {
             this.showOverlay("Loading...");
@@ -27,7 +44,7 @@ const gridMaster = {
             $$("frmMaster").clearValidation();
             //console.log(cell);
         },
-        onItemClick: function (userId, e, trg) {
+        onItemClick: function (id, e, trg) {
             //console.log(id);
             $$("status").refresh();
 
@@ -43,7 +60,7 @@ const formMaster = {
     elementsConfig: { labelWidth: 100, labelAlign: "right" },
     elements: [
     	{ view: "text", name:"userId", label: "id", disabled:true },
-    	{ view: "text", name:"name", label: "이름",  invalidMessage:"이름을 입력해주세요."},
+    	{ view: "text", name:"userName", label: "이름", disabled:true, invalidMessage:"이름을 입력해주세요."},
         { view: "text", name: "studentId",  label: "학번", invalidMessage:"학번을 입력해주세요." },
         { view: "text", name: "school", label: "학교" }, 
         { view: "text", name: "major", label: "전공" },
@@ -161,7 +178,7 @@ const ctrlView = {
             view: "button", id: "btnSearch", value: "검색", width: 100, height: 40,
             click: function () {
                 var params = { name: $$("txtName").getValue() };
-                logic.selectStudents(params);
+                logicFunction[index](params);
            }
         },
         {},
@@ -184,14 +201,24 @@ export const mainView = {
             cols: [
                 {
                     rows:[
-                        { template: "학생 목록", height: 32, css:"ctrlTitle"},
+                        {
+                            view: "button", id: "btnGrid", value: searchType[index], height: 32, css: "ctrlTitle",
+                            click: function () {
+                                index += 1;
+                                index %= arraySize;
+                                $$("btnGrid").setValue(searchType[index]);
+                                $$("dtMaster").refreshColumns(gridColumns[index]);
+
+                                logicFunction[index]();
+                            }
+                        },
                         gridMaster
                     ]
                 },
                 { view: "resizer" },
                 {
                     rows: [
-                        { template: "사용자 정보", height: 32, css:"ctrlTitle" },
+                        { template: "학생 정보", height: 32, css:"ctrlTitle" },
                         formMaster
                     ]
                 }

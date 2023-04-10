@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import emblock.framework.exception.DomainException;
+import emblock.framework.helper.Do;
+import emblock.mosti.application.port.out.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,30 +42,47 @@ public class StudentService implements IStudentService{
     @Autowired
     private IStudentRepository studentRepository;
 
+    private IUserRepository userRepository;
+
     @Override
     public List<StudentRespDto> 목록조회() {
         return this.studentRepository.목록조회().stream().map(StudentRespDto::생성).collect(Collectors.toList());
     }
 
     @Override
-    public StudentRespDto 조회(String userId) {
-        return StudentRespDto.생성(this.studentRepository.조회(Long.valueOf(userId)));
+    public StudentRespDto 조회(String id) {
+        Student student = this.studentRepository.조회(Long.valueOf(id));
+        if(Do.비었음(student))
+        {
+            return null;
+        }
+
+        return StudentRespDto.생성(student);
     }
 
     @Override
     public StudentRespDto 이름학번조회(String name, String studentId) {
-        return StudentRespDto.생성(this.studentRepository.이름학번조회(name, studentId));
+        Student student = this.studentRepository.이름학번조회(name, studentId);
+        if(Do.비었음(student))
+        {
+            return null;
+        }
+
+        return StudentRespDto.생성(student);
     }
 
     @Override
-    public void 추가(StudentCreateReqDto studentCreateReqDto) {
-        Student student = Student.Builder.builder등록(studentCreateReqDto.name(), studentCreateReqDto.studentId(), studentCreateReqDto.school(), studentCreateReqDto.major()).build();
+    public Student 추가(StudentCreateReqDto studentCreateReqDto) {
+        long userId = Long.parseLong(studentCreateReqDto.userId());
+        Student student = Student.Builder.builder등록(userId, studentCreateReqDto.userName(), studentCreateReqDto.studentId(), studentCreateReqDto.school(), studentCreateReqDto.major()).build();
         this.studentRepository.추가(student);
+
+        return student;
     }
 
     @Override
-    public void 수정(String userId, StudentUpdateReqDto studentUpdateReqDto) {
-        Student student = Student.Builder.builder수정(Long.valueOf(userId), studentUpdateReqDto.name(), studentUpdateReqDto.school(), studentUpdateReqDto.major()).build();        
+    public void 수정(String id, StudentUpdateReqDto studentUpdateReqDto) {
+        Student student = Student.Builder.builder수정(Long.valueOf(id), studentUpdateReqDto.name(), studentUpdateReqDto.school(), studentUpdateReqDto.major()).build();        
         this.studentRepository.수정(student);
     }
 

@@ -12,7 +12,7 @@ public class StudentRowMapper implements RowMapper<Student> {
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Student.Builder.builder찾기(rs.getLong("user_id"))
                 .userId(rs.getLong("user_id"))
-                .name(rs.getString("name"))
+                .userName(rs.getString("user_name"))
                 .studentId(rs.getString("student_id"))
                 .school(rs.getString("school"))
                 .major(rs.getString("major"))

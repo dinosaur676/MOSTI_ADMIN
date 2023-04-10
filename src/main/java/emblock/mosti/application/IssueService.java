@@ -53,7 +53,7 @@ public class IssueService implements IIssueService {
         //학생 조회
         Student student = studentRepository.조회(Long.valueOf(studentId));
         // StudentRespDto studentRespDto = StudentRespDto.생성(student);
-        return student.getName();
+        return student.getUserName();
     }
 
     @Override

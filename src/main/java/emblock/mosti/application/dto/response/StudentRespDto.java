@@ -6,7 +6,7 @@ import emblock.mosti.application.domain.Student;
 
 public record StudentRespDto (
     String userId,
-    String name,
+    String userName,
     String studentId,
     String school,
     String major,
@@ -16,7 +16,7 @@ public record StudentRespDto (
     public static StudentRespDto 생성(Student student){
         return new StudentRespDto(
                 String.valueOf(student.getUserId()),
-                student.getName(),
+                student.getUserName(),
                 student.getStudentId(),
                 student.getSchool(),
                 student.getMajor(),

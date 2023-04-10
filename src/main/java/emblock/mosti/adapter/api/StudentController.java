@@ -5,6 +5,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.beust.ah.A;
+import emblock.framework.exception.DomainException;
+import emblock.framework.helper.Do;
+import emblock.mosti.adapter.blockchain.ContractType;
+import emblock.mosti.application.domain.Account;
+import emblock.mosti.application.port.in.IAccountService;
+import emblock.mosti.application.port.in.IGatewayService;
+import emblock.mosti.application.port.out.IAccountRepoitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +39,13 @@ import emblock.mosti.application.port.in.IUserService;
 public class StudentController {
     @Autowired
     private IStudentService studentService;
+    @Autowired
+    private IGatewayService gatewayService;
+
+    @Autowired
+    private IAccountService accountService;
+
+
     
     //user에 학생을 추가할 필요 없을 듯.
     //A 2 : admin
@@ -58,7 +73,21 @@ public class StudentController {
     //create
     @PostMapping
     public ResponseDto 추가(@Valid @RequestBody StudentCreateReqDto studentCreateReqDto, Principal principal){
-        this.studentService.추가(studentCreateReqDto);
+        StudentRespDto studentRespDto = this.studentService.이름학번조회(studentCreateReqDto.userName(), studentCreateReqDto.studentId());
+
+        if(Do.있음(studentRespDto))
+        {
+            throw new DomainException("이미 존재하는 학생입니다."); //Exception;
+        }
+
+        Student newStudent = this.studentService.추가(studentCreateReqDto);
+
+        Account newAccount = gatewayService.createAccount();
+        newAccount.setUser_id(newStudent.getUserId());
+        newAccount.setCreatedOn(newStudent.getCreatedOn());
+
+        accountService.addAccount(newAccount, ContractType.PUBLIC);
+
         return new SuccessRespDto("사용자 등록이 성공적으로 완료되었습니다.");
     }
 

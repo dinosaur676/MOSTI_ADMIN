@@ -1,15 +1,15 @@
 export const logic = {
     init: function(){
         // ties between views
-        $$("frmMaster").setValues({ userId: ""});
+        $$("frmMaster").setValues({ id: ""});
         $$("frmMaster").bind($$("dtMaster"));
-        this.selectStudents();
+        this.selectUsers();
         //this.selectUsers();
     },
 
     makeNewForm: function() {
         $$("frmMaster").setValues({
-            userId: "",
+            id: "",
             name: "",
             studentId: "",
             school: "",
@@ -32,6 +32,24 @@ export const logic = {
                     $$("dtMaster").parse(json.data);
 
                    // $$("frmMaster").getChildViews()[3].hide();
+                }
+            }
+            webix.message(json.message, "info", 1000);
+        });
+    },
+
+    selectUsers: function (params) {
+        const promise = userService.search(params);
+
+        promise.then(function (json) {
+            //success
+            //console.log(json);
+            if (json.status == "00") {
+                if (json.data != null) {
+                    $$("dtMaster").clearAll();
+                    $$("dtMaster").parse(json.data);
+
+                    // $$("frmMaster").getChildViews()[3].hide();
                 }
             }
             webix.message(json.message, "info", 1000);
@@ -63,11 +81,7 @@ export const logic = {
 
     saveStudents: function(model) {
         console.log(model);
-        let promise;
-        if (model.userId == "")
-            promise = studentService.add(model);
-        else
-            promise = studentService.modify(model);
+        const promise = studentService.add(model);
 
         promise.then(function (json) {
             //success

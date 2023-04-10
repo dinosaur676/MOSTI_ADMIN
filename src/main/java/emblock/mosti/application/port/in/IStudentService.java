@@ -2,6 +2,7 @@ package emblock.mosti.application.port.in;
 
 import java.util.List;
 
+import emblock.mosti.application.domain.Student;
 import org.springframework.transaction.annotation.Transactional;
 
 import emblock.mosti.application.dto.request.student.StudentCreateReqDto;
@@ -14,7 +15,7 @@ public interface IStudentService {
     StudentRespDto 조회(String userId);
     StudentRespDto 이름학번조회(String name, String studentId);
     @Transactional
-    void 추가(StudentCreateReqDto studentCreateReqDto);
+    Student 추가(StudentCreateReqDto studentCreateReqDto);
     @Transactional
     void 수정(String userId, StudentUpdateReqDto studentUpdateReqDto);
 }

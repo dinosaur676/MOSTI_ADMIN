@@ -41,7 +41,7 @@ public class StudentRepository implements IStudentRepository {
     @Override
     public void 추가(Student student) {
         this.jdbcCommand.실행(StudentRepositorySql.SQL_추가
-                , student.getUserId(), student.getName(), student.getStudentId()
+                , student.getUserId(), student.getUserName(), student.getStudentId()
                 , student.getSchool(), student.getMajor()
                 , student.getCreatedOn(), student.getUpdatedOn());
 
@@ -50,7 +50,7 @@ public class StudentRepository implements IStudentRepository {
     @Override
     public void 수정(Student student) {
         this.jdbcCommand.실행(StudentRepositorySql.SQL_수정
-                , student.getUserId(), student.getName()
+                , student.getUserId(), student.getUserName()
                 , student.getSchool(), student.getMajor()
                 , student.getUpdatedOn());
 
