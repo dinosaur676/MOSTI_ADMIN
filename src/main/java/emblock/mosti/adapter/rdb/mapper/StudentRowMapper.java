@@ -10,8 +10,8 @@ import emblock.mosti.application.domain.Student;
 public class StudentRowMapper implements RowMapper<Student> {
     @Override
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Student.Builder.builder찾기(rs.getLong("id"))
-                .id(rs.getLong("id"))
+        return Student.Builder.builder찾기(rs.getLong("user_id"))
+                .userId(rs.getLong("user_id"))
                 .name(rs.getString("name"))
                 .studentId(rs.getString("student_id"))
                 .school(rs.getString("school"))

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import emblock.mosti.application.domain.Student;
 
 public record StudentRespDto (
-    String id,
+    String userId,
     String name,
     String studentId,
     String school,
@@ -15,7 +15,7 @@ public record StudentRespDto (
 ){
     public static StudentRespDto 생성(Student student){
         return new StudentRespDto(
-                String.valueOf(student.getId()),
+                String.valueOf(student.getUserId()),
                 student.getName(),
                 student.getStudentId(),
                 student.getSchool(),

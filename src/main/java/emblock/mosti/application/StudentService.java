@@ -45,8 +45,8 @@ public class StudentService implements IStudentService{
     }
 
     @Override
-    public StudentRespDto 조회(String id) {
-        return StudentRespDto.생성(this.studentRepository.조회(Long.valueOf(id)));
+    public StudentRespDto 조회(String userId) {
+        return StudentRespDto.생성(this.studentRepository.조회(Long.valueOf(userId)));
     }
 
     @Override
@@ -61,8 +61,8 @@ public class StudentService implements IStudentService{
     }
 
     @Override
-    public void 수정(String id, StudentUpdateReqDto studentUpdateReqDto) {
-        Student student = Student.Builder.builder수정(Long.valueOf(id), studentUpdateReqDto.name(), studentUpdateReqDto.school(), studentUpdateReqDto.major()).build();        
+    public void 수정(String userId, StudentUpdateReqDto studentUpdateReqDto) {
+        Student student = Student.Builder.builder수정(Long.valueOf(userId), studentUpdateReqDto.name(), studentUpdateReqDto.school(), studentUpdateReqDto.major()).build();        
         this.studentRepository.수정(student);
     }
 
