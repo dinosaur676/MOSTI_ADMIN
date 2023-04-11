@@ -19,7 +19,7 @@ const gridColumns = [
         { id: "userName", header: "이름", width: 100, sort:"string"},
         { id: "studentId", header: "학번", width: 120, sort:"string"},
         { id: "school", header: "학교", width: 160, sort:"string", fillspace:true},
-        { id: "major", header: "전공", width: 100, sort:"string", hidden:true },
+        { id: "major", header: "전공", width: 100, sort:"string"},
     ]
 ]
 const gridMaster = {
