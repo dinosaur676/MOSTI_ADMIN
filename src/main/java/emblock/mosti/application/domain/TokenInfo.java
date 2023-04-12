@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 public class TokenInfo {
 
     private long tokenId;
-    private long type;
+    private String type;
     private String metaData;
     private String tokenOwner;
     private char contractType;
     private LocalDateTime createdOn;
 
-    public TokenInfo(long tokenId, long type, String metaData, String tokenOwner, char contractType) {
+    public TokenInfo(long tokenId, String type, String metaData, String tokenOwner, char contractType) {
         this.tokenId = tokenId;
         this.type = type;
         this.metaData = metaData;
@@ -20,7 +20,7 @@ public class TokenInfo {
         this.createdOn = LocalDateTime.now();
     }
 
-    public TokenInfo(long tokenId, long type, String metaData, String tokenOwner, char contractType, LocalDateTime createdOn) {
+    public TokenInfo(long tokenId, String type, String metaData, String tokenOwner, char contractType, LocalDateTime createdOn) {
         this.tokenId = tokenId;
         this.type = type;
         this.metaData = metaData;
@@ -33,7 +33,7 @@ public class TokenInfo {
         return tokenId;
     }
 
-    public long getType() {
+    public String getType() {
         return type;
     }
 

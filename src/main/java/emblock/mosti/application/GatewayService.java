@@ -1,12 +1,17 @@
 package emblock.mosti.application;
 
+import emblock.framework.exception.DomainException;
+import emblock.framework.helper.Do;
 import emblock.mosti.adapter.blockchain.ContractType;
 import emblock.mosti.adapter.blockchain.Gateway;
 import emblock.mosti.adapter.blockchain.GatewayResponse;
+import emblock.mosti.adapter.rdb.TokenControlRepository;
 import emblock.mosti.application.domain.Account;
 import emblock.mosti.application.domain.TokenInfo;
+import emblock.mosti.application.domain.TokenType;
 import emblock.mosti.application.domain.UserToken;
 import emblock.mosti.application.port.in.IGatewayService;
+import emblock.mosti.application.port.out.ITokenControlRepository;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -29,9 +34,11 @@ import java.util.Scanner;
 public class GatewayService implements IGatewayService {
 
     private Gateway gateWay;
+    private ITokenControlRepository tokenControlRepository;
 
-    public GatewayService(Gateway gateWay) {
+    public GatewayService(Gateway gateWay, ITokenControlRepository tokenControlRepository) {
         this.gateWay = gateWay;
+        this.tokenControlRepository = tokenControlRepository;
     }
 
     @Override
@@ -49,10 +56,14 @@ public class GatewayService implements IGatewayService {
         param.put("data", metaData);
 
         GatewayResponse gatewayResponse = gateWay.requestWithPostWebClient(Gateway.API.ADMIN_CREATE_TOKEN, param);
+        TokenType tokenTypeDescription = tokenControlRepository.토큰타입조회(tokenType);
+
+        if(Do.비었음(tokenTypeDescription))
+            throw new DomainException("해당 토큰 타입은 존재하지 않습니다.");
 
         TokenInfo tokenInfo = new TokenInfo(
                 Long.parseLong(gatewayResponse.getData("tokenId")),
-                tokenType,
+                tokenTypeDescription.getDescription(),
                 gatewayResponse.getData("metaData"),
                 gatewayResponse.getData("tokenOwner"),
                 ContractType.PUBLIC.getType()
@@ -109,10 +120,14 @@ public class GatewayService implements IGatewayService {
         param.put("data", metaData);
 
         GatewayResponse gatewayResponse = gateWay.requestWithPostWebClient(Gateway.API.USER_CREATE_TOKEN, param);
+        TokenType tokenTypeDescription = tokenControlRepository.토큰타입조회(tokenType);
+
+        if(Do.비었음(tokenTypeDescription))
+            throw new DomainException("해당 토큰 타입은 존재하지 않습니다.");
 
         TokenInfo tokenInfo = new TokenInfo(
                 Long.parseLong(gatewayResponse.getData("tokenId")),
-                tokenType,
+                tokenTypeDescription.getDescription(),
                 gatewayResponse.getData("metaData"),
                 gatewayResponse.getData("tokenOwner"),
                 ContractType.COMMUNITY.getType()

@@ -75,6 +75,11 @@ public class PageController {
         return "student";
     }
 
+    @GetMapping("/token-info")
+    String tokenInfoView() {
+        return "token_info";
+    }
+
 
     @GetMapping("/power-generation")
     String powerGenView(Model model, Principal principal){

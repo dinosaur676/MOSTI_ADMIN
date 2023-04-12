@@ -3,26 +3,31 @@ package emblock.mosti.adapter.api;
 import emblock.framework.dto.FailRespDto;
 import emblock.framework.dto.ResponseDto;
 import emblock.framework.dto.SuccessRespDto;
+import emblock.framework.exception.DomainException;
 import emblock.framework.helper.Do;
 import emblock.mosti.adapter.blockchain.ContractType;
-import emblock.mosti.application.TokenControlService;
+import emblock.mosti.application.domain.Account;
 import emblock.mosti.application.domain.TokenInfo;
-import emblock.mosti.application.domain.User;
 import emblock.mosti.application.domain.UserToken;
 import emblock.mosti.application.dto.request.gateway.BurnTokenRequestDto;
 import emblock.mosti.application.dto.request.gateway.CreateTokenRequestDto;
 import emblock.mosti.application.dto.request.gateway.MintTokenRequestDto;
+import emblock.mosti.application.dto.response.token.TokenInfoRespDto;
+import emblock.mosti.application.dto.response.token.TokenTypeRespDto;
 import emblock.mosti.application.port.in.IAccountService;
 import emblock.mosti.application.port.in.IGatewayService;
 import emblock.mosti.application.port.in.ITokenControlService;
+import emblock.mosti.application.security.AuthUser;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@RequestMapping("/gateway")
+@RequestMapping("/api/gateway")
 @RestController
 public class GatewayController {
 
@@ -36,12 +41,42 @@ public class GatewayController {
         this.tokenControlService = tokenControlService;
     }
 
+    @PostMapping("/token-info")
+    public ResponseDto 목록조회() {
+        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Account account = accountService.findAccountById(Long.parseLong(authUser.getUserId()), ContractType.PUBLIC);
+
+        List<TokenInfoRespDto> respDtoList = tokenControlService.발행한토큰목록조회(account.getAddress());
+
+        if(respDtoList.isEmpty() || respDtoList == null) {
+            throw new DomainException("데이터가 없습니다.");
+        }
+
+        return new SuccessRespDto(respDtoList, "조회가 성공적으로 이루어졌습니다.");
+    }
+
+    @PostMapping("/token-type")
+    public ResponseDto 토큰타입목록조회() {
+        List<TokenTypeRespDto> respDtoList = tokenControlService.토큰타입목록조회();
+
+        if(respDtoList.isEmpty() || respDtoList == null)
+        {
+            throw new DomainException("데이터가 없습니다.");
+        }
+
+        return new SuccessRespDto(respDtoList, "조회가 성공적으로 완료되었습니다.");
+    }
+
     @PostMapping("/admin-create-token")
     public ResponseDto createTokenInPublic(@Valid @RequestBody CreateTokenRequestDto createTokenRequestDto) {
         //Role 체크
 
+        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = accountService.findAccountById(Long.parseLong(authUser.getUserId()), ContractType.PUBLIC);
+
         TokenInfo tokenInfo = this.gatewayService.createTokenInPublic(
-                createTokenRequestDto.tokenOwner(),
+                account.getAddress(),
                 createTokenRequestDto.tokenType(),
                 createTokenRequestDto.metaData());
 
@@ -96,9 +131,13 @@ public class GatewayController {
     @PostMapping("/user-create-token")
     public ResponseDto createTokenInCommunity(@Valid @RequestBody CreateTokenRequestDto createTokenRequestDto) {
         //Role 체크
+        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = accountService.findAccountById(Long.parseLong(authUser.getUserId()), ContractType.COMMUNITY);
+
 
         TokenInfo tokenInfo = this.gatewayService.createTokenInCommunity(
-                createTokenRequestDto.tokenOwner(),
+                account.getAddress(),
                 createTokenRequestDto.tokenType(),
                 createTokenRequestDto.metaData());
 

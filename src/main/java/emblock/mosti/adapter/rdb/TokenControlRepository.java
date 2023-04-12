@@ -78,8 +78,13 @@ public class TokenControlRepository implements ITokenControlRepository {
     }
 
     @Override
-    public List<TokenType> 토큰타입조회() {
-        return tokenTypeJdbcQuery.목록조회(TokenControlSQL.토큰타입조회);
+    public List<TokenType> 토큰타입목록조회() {
+        return tokenTypeJdbcQuery.목록조회(TokenControlSQL.토큰타입목록조회);
+    }
+
+    @Override
+    public TokenType 토큰타입조회(long tokenType) {
+        return tokenTypeJdbcQuery.조회(TokenControlSQL.토큰타입조회, tokenType);
     }
 
     @Override

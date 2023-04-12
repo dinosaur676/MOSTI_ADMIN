@@ -7,8 +7,8 @@ const gridMaster = {
     //autowidth: true,
     navigation:false,       //keyboard protect
     columns: [
-        { id: "id", header: "ID", width: 80, hidden:true  },
-        { id: "name", header: "이름", width: 100, sort:"string"},
+        { id: "userId", header: "ID", width: 80, hidden:true  },
+        { id: "userName", header: "이름", width: 100, sort:"string"},
         { id: "studentId", header: "학번", width: 120, sort:"string"},
         { id: "school", header: "학교", width: 160, sort:"string", fillspace:true},
         { id: "major", header: "전공", width: 100, sort:"string", hidden:true },
@@ -88,8 +88,8 @@ const formMaster = {
     view: "form", id: "frmMaster", scroll: true,
     elementsConfig: { labelWidth: 100, labelAlign: "right" },
     elements: [
-    	{ view: "text", name:"id", label: "id", disabled:true },
-    	{ view: "text", name:"name", label: "이름",  readonly:true},
+    	{ view: "text", name:"userId", label: "id", disabled:true },
+    	{ view: "text", name:"userName", label: "이름",  readonly:true},
         { view: "text", name: "studentId",  label: "학번", readonly:true },
         { view: "text", name: "school", label: "학교", readonly:true }, 
         { view: "text", name: "major", label: "전공", readonly:true },

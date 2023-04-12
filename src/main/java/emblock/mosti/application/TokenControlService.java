@@ -5,11 +5,14 @@ import emblock.mosti.adapter.blockchain.ContractType;
 import emblock.mosti.application.domain.TokenInfo;
 import emblock.mosti.application.domain.TokenType;
 import emblock.mosti.application.domain.UserToken;
+import emblock.mosti.application.dto.response.token.TokenInfoRespDto;
+import emblock.mosti.application.dto.response.token.TokenTypeRespDto;
 import emblock.mosti.application.port.in.ITokenControlService;
 import emblock.mosti.application.port.out.ITokenControlRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenControlService implements ITokenControlService {
@@ -21,13 +24,13 @@ public class TokenControlService implements ITokenControlService {
     }
 
     @Override
-    public TokenInfo 발행한토큰조회(ContractType type, long tokenId) {
-        return tokenControlRepository.발행한토큰조회(type, tokenId);
+    public TokenInfoRespDto 발행한토큰조회(ContractType type, long tokenId) {
+        return TokenInfoRespDto.생성(tokenControlRepository.발행한토큰조회(type, tokenId));
     }
 
     @Override
-    public List<TokenInfo> 발행한토큰목록조회(String tokenOwner) {
-        return tokenControlRepository.발행한토큰목록조회(tokenOwner);
+    public List<TokenInfoRespDto> 발행한토큰목록조회(String tokenOwner) {
+        return tokenControlRepository.발행한토큰목록조회(tokenOwner).stream().map(TokenInfoRespDto::생성).collect(Collectors.toList());
     }
 
     @Override
@@ -86,8 +89,13 @@ public class TokenControlService implements ITokenControlService {
     }
 
     @Override
-    public List<TokenType> 토큰타입조회() {
-        return tokenControlRepository.토큰타입조회();
+    public List<TokenTypeRespDto> 토큰타입목록조회() {
+        return tokenControlRepository.토큰타입목록조회().stream().map(TokenTypeRespDto::생성).collect(Collectors.toList());
+    }
+
+    @Override
+    public TokenTypeRespDto 토큰타입조회(long tokenType) {
+        return TokenTypeRespDto.생성(tokenControlRepository.토큰타입조회(tokenType));
     }
 
     @Override

@@ -21,7 +21,8 @@ public interface ITokenControlRepository {
     void 사용자토큰삭제(String to, long tokenId, ContractType type);
 
 
-    List<TokenType> 토큰타입조회();
+    List<TokenType> 토큰타입목록조회();
+    TokenType 토큰타입조회(long tokenType);
     void 토큰타입추가(String description);
     void 토큰타입수정(int typeId, String description);
 
