@@ -18,11 +18,11 @@ public class UserRowMapper implements RowMapper<User> {
                 .cellPhone(rs.getString("cell_phone"))
                 .status(User.UserStatus.valueOf(rs.getString("status")))
                 .type(User.UserType.valueOf(rs.getString("type")))
-                .walletId(rs.getString("wallet_id"))
-                .publicAddress(rs.getString("public_address"))
                 .createOn(rs.getTimestamp("created_on"))
                 .updatedOn(rs.getTimestamp("updated_on"))
-                .roleId(rs.getInt("role_id")).build()
+                .roleId(rs.getInt("role_id"))
+                .school(rs.getString("school"))
+                .build()
                 ;
     }
     

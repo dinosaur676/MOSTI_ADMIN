@@ -4,7 +4,7 @@ import javax.validation.constraints.NotEmpty;
 
 public record StudentUpdateReqDto (
     @NotEmpty(message = "이름은 필수값입니다.")
-    String name,
+    String userName,
     @NotEmpty(message = "학교는 필수값입니다.")
     String school,
     @NotEmpty(message = "학번은 필수값입니다.")

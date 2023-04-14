@@ -28,6 +28,10 @@ public class UserRepository implements IUserRepository {
     public List<User> 목록조회() {
         return this.jdbcQuery.목록조회(UserRepositorySql.SQL_목록조회);
     }
+    @Override
+    public List<User> 목록조회(String school) {
+        return this.jdbcQuery.목록조회(UserRepositorySql.SQL_학생목록조회, school);
+    }
 
     @Override
     public List<User> 목록조회(int roleId) {
@@ -36,7 +40,14 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User 조회(String loginId) {
-        return this.jdbcQuery.조회(UserRepositorySql.SQL_조회, loginId);
+        User user = this.jdbcQuery.조회(UserRepositorySql.SQL_조회, loginId);
+        return user;
+    }
+
+    @Override
+    public User 조회(long userId) {
+        User user = this.jdbcQuery.조회(UserRepositorySql.SQL_유저아이디로조회, userId);
+        return user;
     }
 
     @Override
@@ -44,7 +55,7 @@ public class UserRepository implements IUserRepository {
         this.jdbcCommand.실행(UserRepositorySql.SQL_추가
                 , user.getUserId(), user.getLoginId(), user.getPassword(), user.getUserName(),
                 user.getEmail(), user.getAddress(), user.getPhone(), user.getCellPhone(), user.getType().name(),
-                user.getStatus().name(), user.getRoleId(),
+                user.getStatus().name(), user.getRoleId(), user.getSchool(),
                 user.getCreatedOn(), user.getUpdatedOn());
 
     }
@@ -73,7 +84,7 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public void 삭제(long id) {
-
+        this.jdbcCommand.실행(UserRepositorySql.SQL_삭제, id);
     }
 
     @Override

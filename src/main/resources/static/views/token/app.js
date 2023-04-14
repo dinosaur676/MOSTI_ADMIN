@@ -1,5 +1,8 @@
 import {logic} from "./logic.js"
 
+const tokenTypes = logic.getTokenTypes();
+
+
 const gridMaster = {
     view: "datatable",
     id: "dtMaster",
@@ -9,9 +12,9 @@ const gridMaster = {
     navigation:false,       //keyboard protect
     columns: [
         { id: "tokenId", header: "id", width: 80, hidden:true  },
-        { id: "metaData", header: "토큰 정보", width: 100, hidden: true},
         { id: "tokenOwnerName", header: "토큰 주인", width: 120, sort:"string"},
-        { id: "tokenDescription", header: "토큰 타입", width: 160, sort:"string", fillspace:true},
+        { id: "type", header: "토큰 타입", width: 120, sort:"string"},
+        { id: "metaData", header: "토큰 정보", width: 100, sort: "string", fillspace: true},
     ],
     on: {
         onBeforeLoad: function () {
@@ -45,10 +48,12 @@ const formMaster = {
     	{ view: "text", name:"tokenId", label: "id", readonly:true },
     	{ view: "text", name:"metaData", label: "토큰 정보", height: 300, readonly:true},
         { view: "text", name: "tokenOwnerName",  label: "토큰 주인", readonly: true},
-        { view: "text", name: "tokenDescription", label: "토큰 타입", readonly: true },
-        { view: "button", label: "토큰 생성", type: "form", width: 80, align: "right",
+        { view: "text", name: "type", label: "토큰 타입", readonly: true },
+        { view: "button", label: "토큰 생성", type: "form", align: "right",
             css:"webix_primary",
             click: function() {
+                //$$("tokenType").define("options", logic.getTokenTypes());
+                //$$("tokenType").refresh();
                 webix.ui(popup).show();
             }
         },
@@ -89,13 +94,14 @@ const popup = {
     view : "window",
     id: "create_token_popup",
     height: 600,
+    width: 600,
     close: true,
     position: "center",
     head: {
         cols: [
             {template: "토큰 생성", type: "header", borderless:true},
             {
-                view: "icon", icon:"wxi_close", tooltip: "닫기", click: function () {
+                view: "icon", icon: "wxi_close", tooltip: "닫기", click: function () {
                     $$("create_token_popup").close();
                 }
             },
@@ -105,13 +111,14 @@ const popup = {
         id: "popup_body",
         rows: [
             {view: "text", id:"metaData", label: "", height: 400, placeholder: "토큰 정보", required: true},
-            {view: "select", id:"tokenType", name: "tokenType", label: "토큰 종류", value: 1,
-                options: [
-                ]
-            },
+            {view: "text", id:"tokenType", type: "number", name: "tokenType", label: "토큰 종류", required: true},
             {view:"button", id: "createTokenButton", height: 50, value: "토큰 생성",
                 click: function () {
-                    logic.createToken()
+                    const param = {
+                        "metaData" : $$("metaData").getValue(),
+                        "tokenType" : parseInt($$("tokenType").getValue())
+                    }
+                    logic.createToken(param);
                 }
             }
 
@@ -139,7 +146,6 @@ const ctrlView = {
             view: "button", id: "btnSearch", value: "검색", width: 100, height: 40,
             click: function () {
                 var params = { name: $$("txtName").getValue() };
-                logicFunction[index](params);
            }
         },
         {},

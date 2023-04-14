@@ -12,10 +12,9 @@ public record UserRespDto(
         String address,
         String phone,
         String cellPhone,
+        String school,
         User.UserType type,
         User.UserStatus status,
-        String walletId,
-        String publicAddress,
         LocalDateTime createdOn,
         LocalDateTime updatedOn
 ) {
@@ -29,10 +28,9 @@ public record UserRespDto(
                 user.getAddress(),
                 user.getPhone(),
                 user.getCellPhone(),
+                user.getSchool(),
                 user.getType(),
                 user.getStatus(),
-                user.getWalletId() == null ? "" : user.getWalletId(),
-                user.getPublicAddress() == null ? "" : user.getPublicAddress(),
                 user.getCreatedOn(),
                 user.getUpdatedOn()
         );

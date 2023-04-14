@@ -38,7 +38,7 @@ public class AccountRepository implements IAccountRepoitory {
 
     @Override
     public void updateAccount(long user_id, Account account, ContractType type) {
-        this.jdbcCommand.실행(AccountSql.updateAccount, type.getTableName(),
+        this.jdbcCommand.실행(AccountSql.updateAccount.formatted(type.getTableName()),
                 account.getAddress(),
                 account.getPrivateKey(),
                 user_id);
@@ -46,7 +46,7 @@ public class AccountRepository implements IAccountRepoitory {
 
     @Override
     public void deleteAccount(long user_id, ContractType type) {
-        this.jdbcCommand.실행(AccountSql.updateAccount, type.getTableName(),
+        this.jdbcCommand.실행(AccountSql.deleteAccount.formatted(type.getTableName()),
                 user_id);
     }
 }

@@ -52,4 +52,8 @@ public class TokenInfo {
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
+
+    public void createdCurrentTime() {
+        createdOn = LocalDateTime.now();
+    }
 }

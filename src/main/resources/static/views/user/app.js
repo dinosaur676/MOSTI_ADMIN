@@ -10,6 +10,7 @@ const gridMaster = {
         { id: "id", header: "ID", width: 80, hidden:true  },
         { id: "userName", header: "이름", width: 100, sort:"string"},
         { id: "loginId", header: "로그인아이디", width: 120, sort:"string"},
+        { id: "school", header: "학교", width: 120, sort:"string"},
         { id: "email", header: "이메일", width: 160, sort:"string", fillspace:true},
         { id: "password", header: "암호", width: 100, sort:"string", hidden:true },
         { id: "status", header: "상태", width: 80, hidden:true, css:{'text-align': 'center'} }
@@ -48,6 +49,7 @@ const formMaster = {
         { view: "text", name: "userName",  label: "이름", invalidMessage:"이름을 입력해주세요." },
         { view: "text", name: "email", type:"email",  label: "이메일", /*validate:webix.rules.isEmail, invalidMessage:"이메일을 입력해주세요."*/},
         { view: "text", name: "password", type:"password",  label: "암호" },
+        { view: "text", name: "school", label: "school", invalidMessage: "학교를 입력해주세요." },
         {
             view: "select", id: "type", name: "type",
             label: "유형", value: 1,
@@ -90,8 +92,6 @@ const formMaster = {
                         var model = $$("frmMaster").getValues();
                         if($$("frmMaster").validate())
                             logic.saveUser(model);
-                        //console.log(model);
-
                     }
                 }
             ]

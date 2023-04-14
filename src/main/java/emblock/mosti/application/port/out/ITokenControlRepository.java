@@ -11,14 +11,15 @@ import java.util.List;
 public interface ITokenControlRepository {
 
     TokenInfo 발행한토큰조회(ContractType type, long tokenId);
-    List<TokenInfo> 발행한토큰목록조회(String tokenOwner);
+    TokenInfo 발행한토큰조회(String tokenOwner, long tokenType, ContractType contractType);
+    List<TokenInfo> 발행한토큰목록조회(String tokenOwner, ContractType type);
 
     void 토큰생성(TokenInfo tokenInfo);
 
     UserToken 사용자소유토큰조회(String address, long tokenId, ContractType type);
     List<UserToken> 사용자소유토큰목록조회(String address, ContractType type);
     void 사용자토큰추가(UserToken userToken);
-    void 사용자토큰삭제(String to, long tokenId, ContractType type);
+    void 사용자토큰삭제(UserToken userToken);
 
 
     List<TokenType> 토큰타입목록조회();

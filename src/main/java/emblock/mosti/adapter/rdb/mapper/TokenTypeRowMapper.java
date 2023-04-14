@@ -10,7 +10,7 @@ public class TokenTypeRowMapper implements RowMapper<TokenType> {
     @Override
     public TokenType mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TokenType(
-                rs.getInt("token_type"),
+                rs.getInt("type"),
                 rs.getString("description"));
     }
 }

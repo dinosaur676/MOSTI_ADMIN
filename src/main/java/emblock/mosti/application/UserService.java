@@ -1,6 +1,7 @@
 package emblock.mosti.application;
 
 // import emblock.mosti.adapter.ramda.NftGateway;
+import emblock.framework.helper.Do;
 import emblock.mosti.adapter.ramda.dto.response.RamdaMapResponseDto;
 import emblock.mosti.application.dto.request.user.UserCreateReqDto;
 import emblock.mosti.application.dto.request.user.UserUpdateReqDto;
@@ -36,21 +37,42 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserRespDto> 목록조회() {
-        return this.userRepository.목록조회().stream().map(UserRespDto::생성).collect(Collectors.toList());
+    public List<UserRespDto> 목록조회(String school) {
+            List<UserRespDto> output = null;
+            if(school.equals(""))
+                output = this.userRepository.목록조회().stream().map(UserRespDto::생성).collect(Collectors.toList());
+            else
+                output = this.userRepository.목록조회(school).stream().map(UserRespDto::생성).collect(Collectors.toList());
+
+        return output;
     }
 
     @Override
     public UserRespDto 조회(String loginId) {
-        return UserRespDto.생성(this.userRepository.조회(loginId));
+            User user = this.userRepository.조회(loginId);
+            if(Do.비었음(user))
+                return null;
+
+            return UserRespDto.생성(user);
     }
 
     @Override
-    public void 추가(UserCreateReqDto userCreateReqDto) {
+    public UserRespDto 조회(long userId) {
+        User user = this.userRepository.조회(userId);
+        if(Do.비었음(user))
+            return null;
+
+        return UserRespDto.생성(user);
+    }
+
+    @Override
+    public User 추가(UserCreateReqDto userCreateReqDto) {
         User user = UserFactory.일반사용자생성(userCreateReqDto);
         user.암호화패스워드설정(this.passwordEncoder.encode(user.getPassword()));
         this.userRepository.추가(user);
         this.지갑정보생성및수정(user.getUserId());
+
+        return user;
     }
 
     @Override
@@ -59,6 +81,11 @@ public class UserService implements IUserService {
         if(!StringUtil.isNullOrEmpty(user.getPassword()))
             user.암호화패스워드설정(this.passwordEncoder.encode(user.getPassword()));
         this.userRepository.수정(user);
+    }
+
+    @Override
+    public void 삭제(long userId) {
+        this.userRepository.삭제(userId);
     }
 
     @Override

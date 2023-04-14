@@ -5,7 +5,6 @@ import javax.validation.constraints.NotEmpty;
 public record StudentCreateReqDto (
     @NotEmpty
     String userId,
-
     @NotEmpty(message = "이름은 필수값입니다.")
     String userName,
     @NotEmpty(message = "학번은 필수값입니다.")

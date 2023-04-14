@@ -17,11 +17,11 @@ const studentService = {
     },
     modify: function (model) {
         //return webix.ajax().headers(ajaxOption).put(this.apiUrl.base, JSON.stringify(model));
-        return apiWrapper.put(this.endpoint.base, JSON.stringify(model));
+        return apiWrapper.put(this.endpoint.base + "/" + model.userId, JSON.stringify(model));
     },
-    // remove: function (model) {
-    //     //return webix.ajax().headers(ajaxOption).del(this.apiUrl.base + "/" + model.id);
-    //     return apiWrapper.del(this.endpoint.base + "/" + model.id);
-    // }
+    remove: function (model) {
+        //return webix.ajax().headers(ajaxOption).del(this.apiUrl.base + "/" + model.id);
+        return apiWrapper.del(this.endpoint.base + "/" + model.userId);
+    }
 
 };

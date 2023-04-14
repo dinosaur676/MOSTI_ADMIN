@@ -1,14 +1,19 @@
 const issueService = {
     endpoint: {
-        base: "/api/issue",
+        tokenBase: "/api/gateway",
+        studentBase: "/api/students",
     },
 
-
-    issueStudentId: function(id, model){
-        return apiWrapper.post(this.endpoint.base+'/'+id, JSON.stringify(model));
+    callTokenAPIWithParam: function (url, param) {
+        return apiWrapper.post(this.endpoint.tokenBase + url, param);
     },
 
-    valid: function(id, model){
-        return apiWrapper.post(this.endpoint.base+'/valid/'+id, JSON.stringify(model));
-    }
+    callStudentAPIWithParam: function (url, param) {
+        return apiWrapper.post(this.endpoint.studentBase + url, param);
+    },
+
+    callStudentAPIWithParamGet: function (url, param) {
+        return apiWrapper.get(this.endpoint.studentBase + url, param);
+    },
+
 }

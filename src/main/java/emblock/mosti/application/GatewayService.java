@@ -50,6 +50,16 @@ public class GatewayService implements IGatewayService {
     }
 
     @Override
+    public int balanceOfInPublic(String to, long tokenId) {
+        Map<String, String> param = new HashMap<>();
+        param.put("to", to);
+        param.put("tokenId", String.valueOf(tokenId));
+
+        GatewayResponse gatewayResponse = gateWay.requestWithPostWebClient(Gateway.API.ADMIN_BALANCE, param);
+        return Integer.parseInt(gatewayResponse.getData("balance"));
+    }
+
+    @Override
     public TokenInfo createTokenInPublic(String tokenOwner, long tokenType, String metaData) {
         Map<String, String> param = new HashMap<>();
         param.put("tokenOwner", tokenOwner);
@@ -63,7 +73,7 @@ public class GatewayService implements IGatewayService {
 
         TokenInfo tokenInfo = new TokenInfo(
                 Long.parseLong(gatewayResponse.getData("tokenId")),
-                tokenTypeDescription.getDescription(),
+                String.valueOf(tokenTypeDescription.getType()),
                 gatewayResponse.getData("metaData"),
                 gatewayResponse.getData("tokenOwner"),
                 ContractType.PUBLIC.getType()
@@ -83,10 +93,12 @@ public class GatewayService implements IGatewayService {
 
         GatewayResponse gatewayResponse = gateWay.requestWithPostWebClient(Gateway.API.ADMIN_MINT_TOKEN, param);
 
+        TokenInfo tokenInfo = tokenControlRepository.발행한토큰조회(ContractType.PUBLIC, tokenId);
+        tokenInfo.createdCurrentTime();
+
         UserToken userToken = new UserToken(
                 gatewayResponse.getData("to"),
-                Long.parseLong(gatewayResponse.getData("tokenId")),
-                ContractType.PUBLIC.getType(),
+                tokenInfo,
                 deletedOn
         );
 
@@ -102,11 +114,12 @@ public class GatewayService implements IGatewayService {
         param.put("tokenId", String.valueOf(tokenId));
 
         GatewayResponse gatewayResponse = gateWay.requestWithPostWebClient(Gateway.API.ADMIN_BURN_TOKEN, param);
+        TokenInfo tokenInfo = tokenControlRepository.발행한토큰조회(ContractType.PUBLIC, tokenId);
 
         UserToken userToken = new UserToken(
                 gatewayResponse.getData("to"),
-                Long.parseLong(gatewayResponse.getData("tokenId")),
-                ContractType.PUBLIC.getType()
+                tokenInfo,
+                LocalDateTime.now()
         );
 
         return userToken;
@@ -127,7 +140,7 @@ public class GatewayService implements IGatewayService {
 
         TokenInfo tokenInfo = new TokenInfo(
                 Long.parseLong(gatewayResponse.getData("tokenId")),
-                tokenTypeDescription.getDescription(),
+                String.valueOf(tokenTypeDescription.getType()),
                 gatewayResponse.getData("metaData"),
                 gatewayResponse.getData("tokenOwner"),
                 ContractType.COMMUNITY.getType()
@@ -147,10 +160,12 @@ public class GatewayService implements IGatewayService {
 
         GatewayResponse gatewayResponse = gateWay.requestWithPostWebClient(Gateway.API.USER_MINT_TOKEN, param);
 
+        TokenInfo tokenInfo = tokenControlRepository.발행한토큰조회(ContractType.COMMUNITY, tokenId);
+        tokenInfo.createdCurrentTime();
+
         UserToken userToken = new UserToken(
                 gatewayResponse.getData("to"),
-                Long.parseLong(gatewayResponse.getData("tokenId")),
-                ContractType.COMMUNITY.getType(),
+                tokenInfo,
                 deletedOn
         );
 
@@ -165,11 +180,12 @@ public class GatewayService implements IGatewayService {
         param.put("tokenId", String.valueOf(tokenId));
 
         GatewayResponse gatewayResponse = gateWay.requestWithPostWebClient(Gateway.API.USER_BURN_TOKEN, param);
+        TokenInfo tokenInfo = tokenControlRepository.발행한토큰조회(ContractType.COMMUNITY, tokenId);
 
         UserToken userToken = new UserToken(
                 gatewayResponse.getData("to"),
-                Long.parseLong(gatewayResponse.getData("tokenId")),
-                ContractType.COMMUNITY.getType()
+                tokenInfo,
+                LocalDateTime.now()
         );
 
         return userToken;

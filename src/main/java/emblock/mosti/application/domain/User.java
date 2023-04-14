@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class User extends BaseDomain{
 
     private User(String loginId, String password, String userName, String email, String address, String phone,
-                String cellPhone, UserType type, UserStatus status) {
+                String cellPhone, String school, UserType type, UserStatus status) {
         this.userId = SnowflakeIdGenerator.genId();
         this.loginId = loginId;
         this.password = password;
@@ -23,6 +23,7 @@ public class User extends BaseDomain{
         this.cellPhone = cellPhone;
         this.type = type;
         this.status = status;
+        this.school = school;
         super.현재일시설정();
     }
 
@@ -41,7 +42,7 @@ public class User extends BaseDomain{
         super.수정일시설정();
     }
 
-    private User(long userId, String loginId, String password, String userName, String email, String address, String phone, String cellPhone, UserType type, UserStatus status, String walletId, String publicAddress, Timestamp createdOn, Timestamp updatedOn, int roleId) {
+    private User(long userId, String loginId, String password, String userName, String email, String address, String phone, String cellPhone, String school, UserType type, UserStatus status, Timestamp createdOn, Timestamp updatedOn, int roleId) {
         this.userId = userId;
         this.loginId = loginId;
         this.password = password;
@@ -52,9 +53,8 @@ public class User extends BaseDomain{
         this.cellPhone = cellPhone;
         this.type = type;
         this.status = status;
-        this.walletId = walletId;
-        this.publicAddress = publicAddress;
         this.roleId = roleId;
+        this.school = school;
         super.날짜조회(createdOn,updatedOn);
     }
 
@@ -68,13 +68,17 @@ public class User extends BaseDomain{
     private String cellPhone;
     private UserType type;
     private UserStatus status;
-    private String walletId;
-    private String publicAddress;
     private int roleId;
+    private String school;
 
     public enum UserType implements CommonEnumType {
-        S("생산자"),B("구매자"),A("관리자");
+        //A 2 : admin
+        //B 0 : 교직원
+        //S 1 : 학생
+
+        S("학생", 1),B("교직원", 0),A("관리자", 2);
         private final String codeName;
+        private final int roleId;
         @Override
         public String getCode(){
             return name();
@@ -83,8 +87,14 @@ public class User extends BaseDomain{
         public String getCodeName(){
             return this.codeName;
         }
-        UserType(String codeName){
+
+        public int getRoleId() {
+            return roleId;
+        }
+
+        UserType(String codeName, int roleId) {
             this.codeName = codeName;
+            this.roleId = roleId;
         }
 
         @JsonCreator( mode= JsonCreator.Mode.DELEGATING)
@@ -157,16 +167,12 @@ public class User extends BaseDomain{
         return status;
     }
 
-    public String getWalletId() {
-        return walletId;
-    }
-
-    public String getPublicAddress() {
-        return publicAddress;
-    }
-
     public int getRoleId() {
         return roleId;
+    }
+
+    public String getSchool() {
+        return school;
     }
 
     public void 암호화패스워드설정(String encPassword){
@@ -186,9 +192,8 @@ public class User extends BaseDomain{
                 ", cellPhone='" + cellPhone + '\'' +
                 ", type=" + type +
                 ", status=" + status +
-                ", walletId='" + walletId + '\'' +
-                ", publicAddress='" + publicAddress + '\'' +
                 ", roleId=" + roleId +
+                ", school=" + school +
                 '}';
 
 
@@ -205,9 +210,8 @@ public class User extends BaseDomain{
         private String cellPhone;
         private UserType type;
         private UserStatus status;
-        private String walletId;
-        private String publicAddress;
         private int roleId;
+        private String school;
         private Timestamp createdOn;
         private Timestamp updatedOn;
 
@@ -225,6 +229,13 @@ public class User extends BaseDomain{
             this.userId = userId;
         }
 
+        public Builder(long userId, String userName, String school) {
+            this.crudType = CommonEnum.CrudType.isCreate;
+            this.school = school;
+            this.userId = userId;
+            this.userName = userName;
+        }
+
         public Builder(long userId, String userName) {
             this.crudType = CommonEnum.CrudType.isFind;
             this.userId = userId;
@@ -233,6 +244,10 @@ public class User extends BaseDomain{
 
         public static Builder builder등록(String loginId, String password) {
             return new Builder(loginId, password);
+        }
+
+        public static Builder builder등록(long userId, String userName, String school) {
+            return new Builder(userId, userName, school);
         }
 
         public static Builder builder수정(long userId) {
@@ -293,18 +308,13 @@ public class User extends BaseDomain{
             return this;
         }
 
-        public Builder walletId(String val) {
-            walletId = val;
-            return this;
-        }
-
-        public Builder publicAddress(String val) {
-            publicAddress = val;
-            return this;
-        }
-
         public Builder roleId(int val) {
             roleId = val;
+            return this;
+        }
+
+        public Builder school(String val) {
+            this.school = val;
             return this;
         }
 
@@ -322,13 +332,13 @@ public class User extends BaseDomain{
             return switch (this.crudType){
                 case isCreate -> {
                     Assert.notNull(loginId, "필수값입니다.");
-                    yield new User(loginId, password, userName, email, address, phone, cellPhone, type, status);
+                    yield new User(loginId, password, userName, email, address, phone, cellPhone, school, type, status);
                 }
                 case isUpdate -> {
                     yield new User(userId, loginId, password, userName, email, address, phone, cellPhone, type, status);
                 }
                 case isFind -> {
-                    yield  new User( userId,  loginId,  password,  userName,  email,  address,  phone,  cellPhone,  type,  status, walletId, publicAddress, createdOn, updatedOn, roleId);
+                    yield  new User( userId,  loginId,  password,  userName,  email,  address,  phone,  cellPhone, school, type,  status, createdOn, updatedOn, roleId);
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + this.crudType);
             };

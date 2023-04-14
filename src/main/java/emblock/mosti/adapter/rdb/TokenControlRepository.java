@@ -33,48 +33,52 @@ public class TokenControlRepository implements ITokenControlRepository {
 
     @Override
     public TokenInfo 발행한토큰조회(ContractType type, long tokenId) {
-        return tokenInfoJdbcQuery.조회(TokenControlSQL.발행한토큰조회, tokenId, type);
+        return tokenInfoJdbcQuery.조회(TokenControlSQL.발행한토큰조회.formatted(type.getType()), tokenId);
     }
 
     @Override
-    public List<TokenInfo> 발행한토큰목록조회(String tokenOwner) {
-        return tokenInfoJdbcQuery.목록조회(TokenControlSQL.발행한토큰목록조회, tokenOwner);
+    public TokenInfo 발행한토큰조회(String tokenOwner, long tokenType, ContractType contractType) {
+        return tokenInfoJdbcQuery.조회(TokenControlSQL.발행한토큰조회by계정_토큰종류.formatted(contractType.getType()), tokenOwner, tokenType);
+    }
+
+    @Override
+    public List<TokenInfo> 발행한토큰목록조회(String tokenOwner, ContractType contractType) {
+        return tokenInfoJdbcQuery.목록조회(TokenControlSQL.발행한토큰목록조회.formatted(contractType.getType()), tokenOwner);
     }
 
     @Override
     public void 토큰생성(TokenInfo tokenInfo) {
-        jdbcCommand.실행(TokenControlSQL.토큰생성,
+        jdbcCommand.실행(TokenControlSQL.토큰생성.formatted(tokenInfo.getContractType()),
                 tokenInfo.getTokenId(),
                 tokenInfo.getMetaData(),
                 tokenInfo.getCreatedOn(),
                 tokenInfo.getTokenOwner(),
-                tokenInfo.getType(),
-                tokenInfo.getContractType());
+                Long.parseLong(tokenInfo.getType()));
     }
 
     @Override
     public UserToken 사용자소유토큰조회(String address, long tokenId, ContractType type) {
-        return userTokenJdbcQuery.조회(TokenControlSQL.사용자소유토큰조회,
-                address, tokenId, type.getType());
+        return userTokenJdbcQuery.조회(TokenControlSQL.사용자소유토큰조회.formatted(type.getType()),
+                address, tokenId);
     }
 
     @Override
     public List<UserToken> 사용자소유토큰목록조회(String address, ContractType type) {
-        return userTokenJdbcQuery.목록조회(TokenControlSQL.사용자소유토큰목록조회,
-                address, type.getType());
+        return userTokenJdbcQuery.목록조회(TokenControlSQL.사용자소유토큰목록조회.formatted(type.getType()),
+                address);
     }
 
     @Override
     public void 사용자토큰추가(UserToken userToken) {
-        jdbcCommand.실행(TokenControlSQL.사용자토큰추가,
-                userToken.getAccount(), userToken.getTokenId(), userToken.getContractType(),
-                userToken.getCreatedOn(), userToken.getDeletedOn());
+        TokenInfo tokenInfo = userToken.getTokenInfo();
+        jdbcCommand.실행(TokenControlSQL.사용자토큰추가.formatted(tokenInfo.getContractType()),
+                userToken.getAddress(), tokenInfo.getTokenId(),tokenInfo.getCreatedOn(), userToken.getDeletedOn());
     }
 
     @Override
-    public void 사용자토큰삭제(String to, long tokenId, ContractType type) {
-        jdbcCommand.실행(TokenControlSQL.사용자토큰삭제,
-                to, tokenId, type.getType());
+    public void 사용자토큰삭제(UserToken userToken) {
+        jdbcCommand.실행(TokenControlSQL.사용자토큰삭제.formatted(userToken.getTokenInfo().getContractType()),
+                userToken.getAddress(), userToken.getTokenInfo().getTokenId());
     }
 
     @Override

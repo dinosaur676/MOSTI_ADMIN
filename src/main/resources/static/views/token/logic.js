@@ -22,8 +22,15 @@ export const logic = {
         $$("frmMaster").getChildViews()[3].show();
     },
 
-    selectTokens: function () {
-        const promise = tokenService.callAPI("/token_info");
+    selectTokens: function (params) {
+        if(params == null)
+        {
+            params = {
+                "userId" : "",
+                "contractType" : "P"
+            }
+        }
+        const promise = tokenService.callAPIWithParam("/token-info", params);
         //console.log(promise);
         promise.then(function (json) {
             //success
@@ -41,10 +48,16 @@ export const logic = {
     },
 
     createToken: function (params) {
-        const promise = tokenService.callAPI("/admin-create-token", params)
+        const promise = tokenService.callAPIWithParam("/admin-create-token", params)
         promise.then(function (json) {
+
+            if(json.status == "00") {
+                logic.selectTokens();
+            }
+
             webix.message(json.message, "info", 1000);
         });
+
     },
 
     getTokenTypes: function () {
@@ -54,7 +67,18 @@ export const logic = {
 
             if(json.status == "00")
             {
-                console.log(json);
+                let outputMap = new Array();
+
+                json.data.forEach((item) => {
+                    var data = new Object();
+
+                    data.id = item.tokenType;
+                    data.value = item.description;
+
+                    outputMap.push(data);
+                });
+
+                return outputMap;
             }
         })
 

@@ -1,6 +1,7 @@
 package emblock.mosti.application.dto.request.user;
 
 import emblock.mosti.application.domain.User;
+import emblock.mosti.application.dto.response.UserRespDto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -23,5 +24,19 @@ public record UserUpdateReqDto (
         User.UserType type,
         @NotNull(message = "상태는 필수값입니다.")
         User.UserStatus status
-)
-{}
+) {
+        public static UserUpdateReqDto 이름수정(UserRespDto dto, String userName) {
+                return new UserUpdateReqDto(
+                        dto.userId(),
+                        dto.loginId(),
+                        "",
+                        userName,
+                        dto.email(),
+                        dto.address(),
+                        dto.phone(),
+                        dto.cellPhone(),
+                        dto.type(),
+                        dto.status()
+                );
+        }
+}

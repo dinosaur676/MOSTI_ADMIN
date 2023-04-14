@@ -1,5 +1,6 @@
 package emblock.mosti.config;
 
+import emblock.mosti.application.domain.User;
 import emblock.mosti.application.security.AuthUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
     private static final Logger log =  LoggerFactory.getLogger(SecurityConfig.class);
-    private static final String DEFAULT_PAGE= "/page/user";
+    private static final String USER_PAGE= "/page/user";
+    private static final String SCHOOL_PAGE = "/page/student";
+    private static final String CERTIFIED_PAGE = "/page/certified";
     private static final String LOGIN_PAGE= "/page/login";
-    private static final String ISSUE_PAGE= "/page/token-validation";
     private static final String VALID_API= "/api/issue/valid/**";
 
     private final UserDetailsService userDetailsService;
@@ -59,11 +61,11 @@ public class SecurityConfig {
             .authorizeRequests()
             // 페이지 권한 설정
             
-            .antMatchers("/api/admin-users/**").permitAll()
+            .antMatchers("/api/admin-users/**", "/api/third/**").permitAll()
             .antMatchers("/assets/**", "/models/**", "/views/**").permitAll()
-            .antMatchers(ISSUE_PAGE, VALID_API, LOGIN_PAGE, "/page/home").permitAll()
+            .antMatchers(VALID_API, LOGIN_PAGE, "/page/home").permitAll()
             .anyRequest().authenticated()
-        .and() // 로그인 설정
+                .and() // 로그인 설정
         .formLogin()
             .loginPage(LOGIN_PAGE)
             .loginProcessingUrl(LOGIN_PAGE)
@@ -73,7 +75,8 @@ public class SecurityConfig {
             .successHandler((request, response, authentication) -> {
                 ((AuthUser)authentication.getPrincipal()).패스워드지우기();
               response.sendRedirect(
-                      authentication.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))? DEFAULT_PAGE: "/page/user");
+                      authentication.getAuthorities().contains(new SimpleGrantedAuthority(User.UserType.A.getCodeName())) ? USER_PAGE :
+                              authentication.getAuthorities().contains(new SimpleGrantedAuthority(User.UserType.B.getCodeName())) ? SCHOOL_PAGE : CERTIFIED_PAGE);
             })
 //            .failureHandler(authenticationFailureHandler())
             .permitAll()

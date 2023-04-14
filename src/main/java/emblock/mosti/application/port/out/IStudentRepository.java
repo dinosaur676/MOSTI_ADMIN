@@ -10,4 +10,6 @@ public interface IStudentRepository {
     Student 이름학번조회(String name, String studentId);
     void 추가(Student student);
     void 수정(Student student);
+
+    void 삭제(long userId);
 }

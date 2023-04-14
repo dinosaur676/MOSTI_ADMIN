@@ -17,6 +17,8 @@ public class UserFactory {
                 .address(userCreateReqDto.address())
                 .cellPhone(userCreateReqDto.cellPhone())
                 .phone(userCreateReqDto.phone())
+                .roleId(userCreateReqDto.type().getRoleId())
+                .school(userCreateReqDto.school())
                 .build();
     }
 

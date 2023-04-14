@@ -62,13 +62,22 @@ public class PageController {
         //log.debug(LogHelper.printEntity(principal))
         return "user";
     }
+    @GetMapping("/certified")
+    String certifiedView(Model model, Principal principal){
+        //log.debug(LogHelper.printEntity(principal))
+        return "certified";
+    }
 
     @GetMapping("/issue")
     String issueView(Model model, Principal principal){
         //log.debug(LogHelper.printEntity(principal))
         return "issue";
     }
-
+    @GetMapping("/burn")
+    String burnView(Model model, Principal principal){
+        //log.debug(LogHelper.printEntity(principal))
+        return "burn";
+    }
     @GetMapping("/student")
     String studentView(Model model, Principal principal){
         //log.debug(LogHelper.printEntity(principal))
@@ -81,22 +90,5 @@ public class PageController {
     }
 
 
-    @GetMapping("/power-generation")
-    String powerGenView(Model model, Principal principal){
-        //log.debug(LogHelper.printEntity(principal))
-        return "power_generation";
-    }
-
-    @GetMapping("/power-sell")
-    String powerSellView(Model model, Principal principal){
-        //log.debug(LogHelper.printEntity(principal))
-        return "power_sell";
-    }
-
-    @GetMapping("/power-buying")
-    String powerBuyingView(Model model, Principal principal){
-        //log.debug(LogHelper.printEntity(principal))
-        return "power_buying";
-    }
 
 }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <div th:replace="common/head :: head"></div>
+  <title>학생증 인증</title>
+</head>
+<body>
+
+<script th:inline="javascript">
+  const token = /*[[${_csrf.token}]]*/;
+  const header = /*[[${_csrf.headerName}]]*/;
+  const userInfo = /*[[${#authentication.principal}]]*/;
+</script>
+<script src="/models/api-wrapper.js"></script>
+<script src="/models/certifiedService.js"></script>
+<script type="text/javascript">
+  const promise = certifiedService.certified(userInfo.loginId);
+
+  promise.then(function (json) {
+    if(json.status == "00") {
+      document.title = "인증 성공"
+    }
+    else {
+      document.title = "인증 실패";
+    }
+
+    webix.message(json.message, "info", 1000);
+  });
+</script>
+</body>
+</html>

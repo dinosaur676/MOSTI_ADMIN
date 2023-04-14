@@ -50,12 +50,19 @@ public class StudentRepository implements IStudentRepository {
     @Override
     public void 수정(Student student) {
         this.jdbcCommand.실행(StudentRepositorySql.SQL_수정
-                , student.getUserId(), student.getUserName()
-                , student.getSchool(), student.getMajor()
-                , student.getUpdatedOn());
+                , student.getUserName()
+                , student.getSchool()
+                , student.getMajor()
+                , student.getUpdatedOn()
+                , student.getUserId());
 
     }
-  
+
+    @Override
+    public void 삭제(long userId) {
+        this.jdbcCommand.실행(StudentRepositorySql.SQL_삭제, userId);
+    }
+
     public static void  main(String[] args){
         System.out.println(SnowflakeIdGenerator.genId());
     }

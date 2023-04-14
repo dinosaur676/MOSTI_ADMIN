@@ -56,7 +56,29 @@ export const logic = {
         });
     },
 
-    deleteStudent: function(model) {
+    updateStudent: function(model) {
+        if (model) {
+            const promise = studentService.modify(model);
+            promise.then(function (json) {
+                //success
+                //const json = resp.json();
+                //console.log(data);
+                if (json.status == "00") {
+                    webix.message({ text: '수정되었습니다..', expire: 1000 });
+
+                    const params = { name: $$("txtName").getValue()};
+                    logic.selectStudents(params);
+                } else {
+                    webix.message({ type: 'error', text: '[ERROR]\n' + json.info });
+                }
+
+            });
+//            .fail(function (err) {
+//                webix.message({ type: 'error', text: '[ERROR]\n' + err });
+//            });
+        }
+    },
+    deleteStudent: function(index, model) {
         if (model) {
             const promise = studentService.remove(model);
             promise.then(function (json) {
@@ -67,7 +89,8 @@ export const logic = {
                     webix.message({ text: '삭제되었습니다.', expire: 1000 });
 
                     const params = { name: $$("txtName").getValue() };
-                    logic.selectStudents(params);
+                    if(index == 1)
+                        logic.selectStudents(params);
                 } else {
                     webix.message({ type: 'error', text: '[ERROR]\n' + json.info });
                 }
@@ -88,9 +111,6 @@ export const logic = {
             //console.log(json);
             if (json.status == "00") {
                 webix.message({ text: '저장되었습니다.', expire: 1000 });
-
-                const params = { name: $$("txtName").getValue() };
-                logic.selectStudents(params);
             } else {
                 webix.message({ type: 'error', text: '[ERROR]\n' + json.info });
             }

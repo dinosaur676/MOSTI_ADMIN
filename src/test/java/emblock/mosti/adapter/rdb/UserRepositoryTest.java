@@ -5,6 +5,7 @@ import emblock.mosti.application.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -18,6 +19,12 @@ class UserRepositoryTest {
     @Test
     void find() {
         userRepository.목록조회().forEach(System.out::print);
+    }
+
+    @Transactional
+    @Test
+    void delete() {
+        userRepository.삭제(Long.parseLong("7048828214769999872"));
     }
 
     @Test

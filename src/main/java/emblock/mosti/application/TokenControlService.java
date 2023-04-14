@@ -1,13 +1,19 @@
 package emblock.mosti.application;
 
+import emblock.framework.exception.DomainException;
+import emblock.framework.exception.TokenException;
 import emblock.framework.helper.Do;
 import emblock.mosti.adapter.blockchain.ContractType;
+import emblock.mosti.adapter.rdb.SchoolRepository;
+import emblock.mosti.application.domain.School;
 import emblock.mosti.application.domain.TokenInfo;
 import emblock.mosti.application.domain.TokenType;
 import emblock.mosti.application.domain.UserToken;
 import emblock.mosti.application.dto.response.token.TokenInfoRespDto;
 import emblock.mosti.application.dto.response.token.TokenTypeRespDto;
+import emblock.mosti.application.dto.response.token.UserTokenRespDto;
 import emblock.mosti.application.port.in.ITokenControlService;
+import emblock.mosti.application.port.out.ISchoolRepository;
 import emblock.mosti.application.port.out.ITokenControlRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +23,12 @@ import java.util.stream.Collectors;
 @Service
 public class TokenControlService implements ITokenControlService {
 
-    private ITokenControlRepository tokenControlRepository;
+    private final ITokenControlRepository tokenControlRepository;
+    private final ISchoolRepository schoolRepository;
 
-    public TokenControlService(ITokenControlRepository tokenControlRepository) {
+    public TokenControlService(ITokenControlRepository tokenControlRepository, ISchoolRepository schoolRepository) {
         this.tokenControlRepository = tokenControlRepository;
+        this.schoolRepository = schoolRepository;
     }
 
     @Override
@@ -29,63 +37,75 @@ public class TokenControlService implements ITokenControlService {
     }
 
     @Override
-    public List<TokenInfoRespDto> 발행한토큰목록조회(String tokenOwner) {
-        return tokenControlRepository.발행한토큰목록조회(tokenOwner).stream().map(TokenInfoRespDto::생성).collect(Collectors.toList());
+    public TokenInfoRespDto 발행한토큰조회(String tokenOwner, long tokenType, ContractType contractType) {
+        return TokenInfoRespDto.생성(tokenControlRepository.발행한토큰조회(tokenOwner, tokenType, contractType));
+    }
+
+    @Override
+    public List<TokenInfoRespDto> 발행한토큰목록조회(String tokenOwner, ContractType type) {
+        return tokenControlRepository.발행한토큰목록조회(tokenOwner, type).stream().map(TokenInfoRespDto::생성).collect(Collectors.toList());
     }
 
     @Override
     public void 토큰생성(TokenInfo tokenInfo) {
         ContractType contractType = ContractType.getContractType(tokenInfo.getContractType());
         if(contractType == null) {
-
+            throw new TokenException("Contract 타입이 없습니다.");
         }
-            //TODO : Exeption
 
         TokenInfo findToken = tokenControlRepository.발행한토큰조회(contractType, tokenInfo.getTokenId());
 
         if(Do.있음(findToken)) {
-            //TODO: Exeption
+            throw new DomainException("존재하는 토큰입니다.");
         }
 
         tokenControlRepository.토큰생성(tokenInfo);
     }
 
     @Override
-    public UserToken 사용자소유토큰조회(String address, long tokenId, ContractType type) {
-        return tokenControlRepository.사용자소유토큰조회(address, tokenId, type);
+    public UserTokenRespDto 사용자소유토큰조회(String address, long tokenId, ContractType type) {
+        UserToken userToken = tokenControlRepository.사용자소유토큰조회(address, tokenId, type);
+        if(Do.비었음(userToken))
+            return null;
+
+        return UserTokenRespDto.실행(userToken);
     }
 
     @Override
-    public List<UserToken> 사용자소유토큰목록조회(String address, ContractType type) {
-        return tokenControlRepository.사용자소유토큰목록조회(address, type);
+    public List<UserTokenRespDto> 사용자소유토큰목록조회(String address, ContractType type) {
+        return tokenControlRepository.사용자소유토큰목록조회(address, type).stream().map(UserTokenRespDto::실행).collect(Collectors.toList());
     }
 
     @Override
     public void 사용자토큰추가(UserToken userToken) {
-        ContractType contractType = ContractType.getContractType(userToken.getContractType());
+        ContractType contractType = ContractType.getContractType(userToken.getTokenInfo().getContractType());
         if(contractType == null) {
-
+            throw new TokenException("Contract 타입이 없습니다.");
         }
-        //TODO : Exeption
 
-        UserToken findToken = tokenControlRepository.사용자소유토큰조회(userToken.getAccount(), userToken.getTokenId(), contractType);
+        UserToken findToken = tokenControlRepository.사용자소유토큰조회(userToken.getAddress(), userToken.getTokenInfo().getTokenId(), contractType);
 
         if(Do.있음(findToken)) {
-            //TODO: Exeption
+            throw new DomainException("존재하는 토큰입니다.");
         }
 
         tokenControlRepository.사용자토큰추가(userToken);
     }
 
     @Override
-    public void 사용자토큰삭제(String to, long tokenId, ContractType type) {
-        UserToken findToken = tokenControlRepository.사용자소유토큰조회(to, tokenId, type);
-
-        if(Do.비었음(findToken)) {
-            //TODO: Exeption
+    public void 사용자토큰삭제(UserToken userToken) {
+        ContractType contractType = ContractType.getContractType(userToken.getTokenInfo().getContractType());
+        if(contractType == null) {
+            throw new TokenException("Contract 타입이 없습니다.");
         }
 
-        tokenControlRepository.사용자토큰삭제(to, tokenId, type);
+        UserToken findToken = tokenControlRepository.사용자소유토큰조회(userToken.getAddress(), userToken.getTokenInfo().getTokenId(), contractType);
+
+        if(Do.비었음(findToken)) {
+            throw new DomainException("존재하지 않는 토큰입니다.");
+        }
+
+        tokenControlRepository.사용자토큰삭제(userToken);
     }
 
     @Override

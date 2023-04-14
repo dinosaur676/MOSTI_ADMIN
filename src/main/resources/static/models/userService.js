@@ -21,6 +21,6 @@ const userService = {
     },
     remove: function (model) {
         //return webix.ajax().headers(ajaxOption).del(this.apiUrl.base + "/" + model.id);
-        return apiWrapper.del(this.endpoint.base + "/" + model.id);
+        return apiWrapper.del(this.endpoint.base + "/" + model.userId);
     }
 };

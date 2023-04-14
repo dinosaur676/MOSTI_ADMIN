@@ -1,7 +1,26 @@
 import {logic} from "./logic.js"
-const gridMaster = {
+
+const datas = {
+    student: {
+        userId: "",
+        userName: "",
+        studentId: "",
+        school: "",
+        major: "",
+    },
+    token: {
+        tokenId: "",
+        tokenOwnerName: "",
+        type: "",
+        metaData: "",
+    }
+}
+
+let clickedToken = null;
+
+const studentGridMaster = {
     view: "datatable",
-    id: "dtMaster",
+    id: "studentTable",
     select: true,
     headerRowHeight: 35,
     //autowidth: true,
@@ -28,8 +47,12 @@ const gridMaster = {
             //console.log(cell);
         },
         onItemClick: function (id, e, trg) {
-            //console.log(id);
-            $$("status").refresh();
+            var record = $$("studentTable").getItem(id.row);
+            datas.student.userId = record.userId;
+            datas.student.studentId = record.studentId;
+            datas.student.major = record.major;
+            datas.student.userName = record.userName;
+            datas.student.school = record.school;
         },
         onSelectChange: function() {
 
@@ -37,127 +60,45 @@ const gridMaster = {
     }
 };
 
-var qrImg = {};
-const popup_template = {
-    view: "window",
-    id:"issue_popup",
-    //autowidth:true,
-    height: 350,
-    close:true,
-    position:"center",
-    head:{
-        cols:[
-        {template:"학생증 발급", type:"header", borderless:true},
-        {view:"icon", icon:"wxi-close", tooltip:"Close window", click: function(){
-            $$('issue_popup').close();
-        }},
-        ]
-    },
-    body: {
-        id:'body',
-        rows: [
-            { view:"text", id:"authKey", type:"password", label:"", name:"password", height: 50, placeholder: "인증번호" ,required:true,invalidMessage:"비밀번호를 입력해주세요." },        
-            {
-                view: "button", id: "btnIssue", value: "발급", height: 40, width: 300,
-                click: function () {
-                    var model = $$("frmMaster").getValues();
-                    var authKey = $$("authKey").getValue()                
-                    logic.issueStudentId(model.id, {"authKey":authKey});
-                }
-            },
-            /*{
-                id:"tmp", 
-                view:"template",
-                template:"<img src='#src#' class='fit_parent'></img>",
-                width:500,
-                autoheight:true
-              }*/
-            // {
-            //     view: "space", id: "qrImg"
-            //         data: {title: "Image One", src: "" , id: "qrImg"},
-            //         template: function (obj) {
-            //             // obj is a data record object
-            //             return '<img src="'+obj.src+'"/>'
-            //         }
-            // }
-            ] 
-    }
-}
-
-const formMaster = {
-    view: "form", id: "frmMaster", scroll: true,
-    elementsConfig: { labelWidth: 100, labelAlign: "right" },
-    elements: [
-    	{ view: "text", name:"userId", label: "id", disabled:true },
-    	{ view: "text", name:"userName", label: "이름",  readonly:true},
-        { view: "text", name: "studentId",  label: "학번", readonly:true },
-        { view: "text", name: "school", label: "학교", readonly:true }, 
-        { view: "text", name: "major", label: "전공", readonly:true },
-        {
-            view: "select", id: "status", name: "status", //required: true,
-            label: "사용여부", value: 1,
-            options: [
-                { id: "Y", value: "Y" },
-                { id: "N", value: "N" }
-            ]
-        },
-
-        { 
-            view: "button", value: "학생증 발급", align: "right", css:"webix_secondary",
-            click: function() {
-                webix.ui(popup_template).show()
-                //$$('issue_popup').show();
-                // webix.ui({
-                //     view:"window",
-                //     id:"issue_popup",
-                //     autowidth:true,
-                //     height: 350,
-                //     close:true,
-                //     position:"center",
-                //     head:{
-                //         cols:[
-                //         {template:"학생증 발급", type:"header", borderless:true},
-                //         {view:"icon", icon:"wxi-close", tooltip:"Close window", click: function(){
-                //             popup_template.close();
-                //         }}
-                //         ]
-                //     },
-                //     body: popup_template
-                // }).show();
-            }
-        }
+const tokenGridMaster = {
+    view: "datatable",
+    id: "tokenTable",
+    select: true,
+    headerRowHeight: 35,
+    //autowidth: true,
+    navigation:false,       //keyboard protect
+    columns: [
+        { id: "tokenId", header: "id", width: 80, hidden:true  },
+        { id: "tokenOwnerName", header: "토큰 주인", width: 120, sort:"string"},
+        { id: "type", header: "토큰 타입", width: 120, sort:"string"},
+        { id: "metaData", header: "토큰 정보", width: 100, sort: "string", fillspace: true},
     ],
-    rules:{
-        /*loginId: function (value){
-            if(value  == ""){
-                this.elements.loginId.define("invalidMessage","로그인 아이디를 입력해주세요.");
-                this.elements.loginId.refresh();
-                return false;
-            }
-            if(value.length < 2){
-                this.elements.loginId.define("invalidMessage","2자리이상입력해주세요.");
-                this.elements.loginId.refresh();
-                return false;
-            }
-            return true;
+    on: {
+        onBeforeLoad: function () {
+            this.showOverlay("Loading...");
         },
-        password: function () {
-            //수정시
-            if(this.elements.userId.getValue() !== ""){
-                return true;
-            //신규 등록시
-            }else{
-                if(this.elements.password.getValue() === ""){
-                    this.elements.password.define("invalidMessage","2자리이상입력해주세요.");
-                    this.elements.password.refresh();
-                    return false;
-                }
-                return true;
-            }
-        }*/
+        onAfterLoad: function () {
+            if (!this.count())
+                this.showOverlay("Sorry, there is no data");
+            else
+                this.hideOverlay();
+        },
+        onAfterSelect: function (cell) {
+            //console.log(cell);
+        },
+        onItemClick: function (id, e, trg) {
+            var record = $$("tokenTable").getItem(id.row);
+            datas.token.tokenId = record.tokenId;
+            datas.token.tokenOwnerName = record.tokenOwnerName;
+            datas.token.type = record.type;
+            datas.token.metaData = record.metaData;
+        },
+        onSelectChange: function() {
 
+        }
     }
 };
+
 
 const ctrlView = {
     view: "toolbar",
@@ -184,26 +125,87 @@ const ctrlView = {
         },
     ]
 };
+const popup_form = {
+    view: "form",
+    id: "frmMaster",
+    scroll: true,
+    elementsConfig: { labelWidth: 100, labelAlign: "right" },
+    elements:
+        [
+            {template: "학생 정보", height: 32, css:"ctrlTitle" },
+            {view: "text", id:"userId", name: "userId", label: "Id"},
+            {view: "text", id:"userName", name: "userName", label: "이름", disabled: true},
+            {view: "text", id:"studentId", name: "studentId", label: "학번", disabled: true},
+            {view: "text", id:"school", name: "school", label: "학교", disabled: true},
+            {view: "text", id:"major", name: "major", label: "학과", disabled: true},
 
+            { template: "토큰 정보", height: 32, css:"ctrlTitle" },
+            {view: "text", id:"tokenId", name: "tokenId", label: "토큰 ID"},
+            {view: "text", id:"tokenOwnerName", name: "tokenOwnerName", label: "토큰 소유자", disabled: true},
+            {view: "text", id:"type", name: "type", label: "토큰 타입", disabled: true},
+            {view: "text", id:"metaData", name: "metaData", label: "토큰 정보", height: 400, disabled: true},
+            {view: "datepicker", id:"deletedOn", label: "만료 기간", value: new Date(9999,1,1 )},
+        ]
+}
+const popup = {
+    view : "window",
+    id: "mint_token_popup",
+    height: 600,
+    width: 600,
+    close: true,
+    position: "center",
+    head: {
+        cols: [
+            {template: "토큰 생성", type: "header", borderless:true},
+            {
+                view: "icon", icon: "wxi_close", tooltip: "닫기", click: function () {
+                    $$("mint_token_popup").close();
+                }
+            },
+        ]
+    },
+    body:
+        {
+           rows: [
+               popup_form,
+               {view:"button", id: "createTokenButton", height: 50, value: "토큰 생성",
+                   click: function () {
+                       const param = {
+                           "userId": $$("userId").getValue(),
+                           "tokenId": $$("tokenId").getValue(),
+                           "deletedOn": $$("deletedOn").getValue()
+                       }
+                       logic.mintToken(param);
+                   }
+               }
+           ],
+        }
+
+}
 export const mainView = {
     id: "mainView",
     type: "space",
     rows: [
-        ctrlView, 
-        // popup_template, 
+        ctrlView,
         {
             cols: [
                 {
                     rows:[
                         { template: "학생 목록", height: 32, css:"ctrlTitle"},
-                        gridMaster
+                        studentGridMaster
                     ]
                 },
                 { view: "resizer" },
                 {
                     rows: [
                         { template: "사용자 정보", height: 32, css:"ctrlTitle" },
-                        formMaster
+                        tokenGridMaster,
+                        { view: "button", label: "토큰 지급", type: "form", align: "right",
+                            css:"webix_primary",
+                            click: function() {
+                                webix.ui(popup).show();
+                            }
+                        },
                     ]
                 },
             ]

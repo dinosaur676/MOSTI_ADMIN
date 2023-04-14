@@ -82,9 +82,12 @@ public class StudentService implements IStudentService{
 
     @Override
     public void 수정(String id, StudentUpdateReqDto studentUpdateReqDto) {
-        Student student = Student.Builder.builder수정(Long.valueOf(id), studentUpdateReqDto.name(), studentUpdateReqDto.school(), studentUpdateReqDto.major()).build();        
+        Student student = Student.Builder.builder수정(Long.parseLong(id), studentUpdateReqDto.userName(), studentUpdateReqDto.school(), studentUpdateReqDto.major()).build();
         this.studentRepository.수정(student);
     }
 
-
+    @Override
+    public void 삭제(long userId) {
+        this.studentRepository.삭제(userId);
+    }
 }

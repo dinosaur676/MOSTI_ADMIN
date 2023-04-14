@@ -10,6 +10,8 @@ public interface IGatewayService {
 
     Account createAccount();
 
+
+    int balanceOfInPublic(String to, long tokenId);
     TokenInfo createTokenInPublic(String tokenOwner, long tokenType, String metaData);
     UserToken mintTokenInPublic(String tokenOwner, String toAddress, long tokenId, LocalDateTime deletedOn);
     UserToken burnTokenInPublic(String tokenOwner, String toAddress, long tokenId);

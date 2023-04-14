@@ -1,12 +1,13 @@
 package emblock.mosti.application.dto.request.gateway;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public record BurnTokenRequestDto(
-        String tokenOwner,
         @NotEmpty
-        String toAddress,
-        @NotEmpty
+        String userId,
+
+        @NotNull
         long tokenId
 ) {
 }

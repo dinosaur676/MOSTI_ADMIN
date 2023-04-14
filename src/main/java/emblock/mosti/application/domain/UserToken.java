@@ -3,49 +3,29 @@ package emblock.mosti.application.domain;
 import java.time.LocalDateTime;
 
 public class UserToken {
-    private String account;
-    private long tokenId;
-    private char contractType;
-    private LocalDateTime createdOn;
+    private String address;
+    TokenInfo tokenInfo;
     private LocalDateTime deletedOn;
 
-    public UserToken(String account, long tokenId, char contractType) {
-        this.account = account;
-        this.tokenId = tokenId;
-        this.contractType = contractType;
-        this.createdOn = LocalDateTime.now();
-    }
-
-    public UserToken(String account, long tokenId, char contractType, LocalDateTime createdOn, LocalDateTime deletedOn) {
-        this.account = account;
-        this.tokenId = tokenId;
-        this.contractType = contractType;
-        this.createdOn = createdOn;
+    public UserToken(String address, TokenInfo tokenInfo, LocalDateTime deletedOn) {
+        this.address = address;
+        this.tokenInfo = new TokenInfo(
+                tokenInfo.getTokenId(),
+                tokenInfo.getType(),
+                tokenInfo.getMetaData(),
+                tokenInfo.getTokenOwner(),
+                tokenInfo.getContractType(),
+                LocalDateTime.now()
+        );
         this.deletedOn = deletedOn;
     }
 
-    public UserToken(String account, long tokenId, char contractType, LocalDateTime deletedOn) {
-        this.account = account;
-        this.tokenId = tokenId;
-        this.contractType = contractType;
-        this.createdOn = LocalDateTime.now();
-        this.deletedOn = deletedOn;
+    public String getAddress() {
+        return address;
     }
 
-    public String getAccount() {
-        return account;
-    }
-
-    public long getTokenId() {
-        return tokenId;
-    }
-
-    public char getContractType() {
-        return contractType;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
+    public TokenInfo getTokenInfo() {
+        return tokenInfo;
     }
 
     public LocalDateTime getDeletedOn() {

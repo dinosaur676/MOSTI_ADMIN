@@ -13,9 +13,9 @@ public class TokenInfoRowMapper implements RowMapper<TokenInfo> {
     public TokenInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TokenInfo(
                 rs.getLong("token_id"),
-                rs.getString("description"),
+                rs.getString("type"),
                 rs.getString("meta_data"),
-                rs.getString("user_name"),
+                rs.getString("token_owner"),
                 rs.getString("contract_type").charAt(0),
                 rs.getTimestamp("created_on").toLocalDateTime()
         );

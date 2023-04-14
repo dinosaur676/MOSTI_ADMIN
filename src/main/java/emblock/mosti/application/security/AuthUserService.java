@@ -48,7 +48,7 @@ public class AuthUserService implements UserDetailsService {
         if (Do.비었음(user))
             throw new UsernameNotFoundException("User " + loginId + " does not exists");
 
-        String role = user.getType() == User.UserType.A ? "ADMIN" : "USER";
+        String role = user.getType().getCodeName();
         List<MenuRoleMapping> menuRoleMappingList = this.menuService.사용자별메뉴조회(user.getRoleId());
         List<ApiRoleMapping> apiRoleMappingList = this.menuService.사용자별api리스트조회(user.getRoleId());
 

@@ -18,4 +18,6 @@ public interface IStudentService {
     Student 추가(StudentCreateReqDto studentCreateReqDto);
     @Transactional
     void 수정(String userId, StudentUpdateReqDto studentUpdateReqDto);
+
+    void 삭제(long userId);
 }

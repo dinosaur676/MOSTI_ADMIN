@@ -10,7 +10,7 @@ public class AccountRowMapper implements RowMapper<Account> {
     @Override
     public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Account(rs.getLong("user_id"),
-                rs.getString("key"),
+                rs.getString("private_key"),
                 rs.getString("address"),
                 rs.getTimestamp("created_on").toLocalDateTime());
     }

@@ -18,6 +18,8 @@ public record UserCreateReqDto(
         String address,
         String phone,
         String cellPhone,
+
+        String school,
         @EnumVal(message = "적절하지 않은 유형입니다." , enumClass = User.UserType.class)
         User.UserType type,
         @EnumVal(message = "적절하지 않은 사용여부 값입니다." , enumClass = User.UserStatus.class)

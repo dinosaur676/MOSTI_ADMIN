@@ -36,11 +36,11 @@ public class AccountService implements IAccountService {
 
     @Override
     public void updateAccount(long user_id, Account account, ContractType type) {
-        this.updateAccount(user_id, account, type);
+        this.accountRepoitory.updateAccount(user_id, account, type);
     }
 
     @Override
     public void deleteAccount(long user_id, ContractType type) {
-        this.deleteAccount(user_id, type);
+        this.accountRepoitory.deleteAccount(user_id, type);
     }
 }

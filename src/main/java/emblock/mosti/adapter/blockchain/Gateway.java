@@ -25,42 +25,48 @@ public class Gateway {
 
     public enum API {
         CREATE_ACCOUNT("/accounts", HttpMethod.POST, ""),
+        ADMIN_BALANCE("/sbts/admin-balance", HttpMethod.POST, """
+                  {
+                    "to" : \"%s\",
+                    "tokenId" : %d
+                  }
+                """),
         ADMIN_CREATE_TOKEN("/sbts/admin-create-token", HttpMethod.POST, """
                 {
-                    "tokenOwner" : %s,
-                    "data" : %s 
+                    "tokenOwner" : \"%s\",
+                    "data" : \"%s\"
                 }
                 """),
         ADMIN_MINT_TOKEN("/sbts/admin-mint-token", HttpMethod.POST, """
                 {
-                    "tokenOwner" : %s,
-                    "to" : %s,
+                    "tokenOwner" : \"%s\",
+                    "to" : \"%s\",
                     "tokenId" : %d 
                 }
                 """),
         ADMIN_BURN_TOKEN("/sbts/admin-burn-token", HttpMethod.POST, """
                 {
-                    "tokenOwner" : %s,
-                    "to" : %s,
+                    "tokenOwner" : \"%s\",
+                    "to" : \"%s\",
                     "tokenId" : %d 
                 }
                 """),
         USER_CREATE_TOKEN("/sbts/user-create-token", HttpMethod.POST, """
                 {
-                    "tokenOwner" : %s,
-                    "data" : %s 
+                    "tokenOwner" : \"%s\",
+                    "data" : \"%s\" 
                 }
                 """),
         USER_MINT_TOKEN("/sbts/user-mint-token", HttpMethod.POST, """
                 {
-                    "tokenOwner" : %s,
-                    "to" : %s,
+                    "tokenOwner" : \"%s\",
+                    "to" : \"%s\",
                     "tokenId" : %d 
                 }
                 """),
         USER_BURN_TOKEN("/sbts/user-burn-token", HttpMethod.POST, """
                 {
-                    "to" : %s,
+                    "to" : \"%s\",
                     "tokenId" : %d 
                 }
                 """);
@@ -107,6 +113,10 @@ public class Gateway {
                     api.ADMIN_CREATE_TOKEN.getJsonFormat().formatted(
                             param.get("tokenOwner"),
                             param.get("data"));
+            case ADMIN_BALANCE ->
+                    api.ADMIN_BALANCE.getJsonFormat().formatted(
+                            param.get("to"),
+                            Long.parseLong(param.get("tokenId")));
             case USER_CREATE_TOKEN ->
                     api.USER_CREATE_TOKEN.getJsonFormat().formatted(
                             param.get("tokenOwner"),
@@ -153,7 +163,8 @@ public class Gateway {
 
         if(api.method != HttpMethod.GET)
         {
-            bodySpec.bodyValue(this.getBodyJson(api, param));
+            String json = this.getBodyJson(api, param);
+            bodySpec.bodyValue(json);
         }
 
         String json =  bodySpec
@@ -164,20 +175,4 @@ public class Gateway {
 
         return new GatewayResponse(json);
     }
-
-
-    //계정생성
-
-
-    //토큰생성(public)
-
-    //토큰전송(public)
-
-    //토큰삭제(public)
-
-    //토큰생성(community)
-
-    //토큰전송(community)
-
-    //토큰삭제(community)
 }

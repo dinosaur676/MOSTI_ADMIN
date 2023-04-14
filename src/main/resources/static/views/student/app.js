@@ -60,9 +60,9 @@ const formMaster = {
     elementsConfig: { labelWidth: 100, labelAlign: "right" },
     elements: [
     	{ view: "text", name:"userId", label: "id", disabled:true },
-    	{ view: "text", name:"userName", label: "이름", disabled:true, invalidMessage:"이름을 입력해주세요."},
+    	{ view: "text", name:"userName", label: "이름", invalidMessage:"이름을 입력해주세요."},
         { view: "text", name: "studentId",  label: "학번", invalidMessage:"학번을 입력해주세요." },
-        { view: "text", name: "school", label: "학교" }, 
+        { view: "text", name: "school", label: "학교", disabled:true  },
         { view: "text", name: "major", label: "전공" },
         {
             view: "select", id: "status", name: "status", //required: true,
@@ -87,8 +87,18 @@ const formMaster = {
                             ok: "Yes", cancel: "No",
                             text: "선택된 사용자를 삭제하시겠습니까?"
                         }).then(function () {
-                            logic.deleteStudent(model);
+                            logic.deleteStudent(index, model);
                         })
+                    }
+                },
+                { view: "button", label: "수정", type: "form", width: 80, align: "right",
+                    css:"webix_primary",
+                    click: function() {
+                        var model = $$("frmMaster").getValues();
+                        if($$("frmMaster").validate())
+                            logic.updateStudent(model);
+                        //console.log(model);
+
                     }
                 },
                 { view: "button", label: "저장", type: "form", width: 80, align: "right",
@@ -103,27 +113,7 @@ const formMaster = {
                 }
             ]
         },
-        { view: "button", label: "학생증 발급", type: "form", align: "right",
-        css:"webix_secondary",
-        click: function() {
-            {   
-                //조회한번하고 발급이력있으면 발급이력이 있습니다 진행하시겠습니까? 하고 물어봐야.. 
-                //title, text 조절 
-                
-                webix.modalbox({
-                    title:"학생증발급",
-                    buttons:["확인"],
-                    width:400,
-                    input: {
-                        required:true,
-                        placeholder:"Siamese, Maine Coon, Sphynx...",
-                      },
-                    callback:function(result){
-                      alert("Result "+result)
-                    }
-                  });
-            }}
-        },
+
 
     ],
     rules:{
@@ -181,14 +171,7 @@ const ctrlView = {
                 logicFunction[index](params);
            }
         },
-        {},
-        {
-            view: "button", value: "새 사용자", width: 150, height: 40,
-            css: "embTxBtn",
-            click: function () {
-                logic.makeNewForm();
-            }
-        }
+
     ]
 };
 
