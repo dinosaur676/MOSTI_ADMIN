@@ -66,39 +66,4 @@ public class ThirdAPIController {
 
         return new SuccessRespDto("인증이 완료되었습니다.");
     }
-
-    private ResponseDto 인증1() {
-        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserRespDto userData = userService.조회(authUser.getLoginId());
-
-        if(Do.비었음(userData))
-        {
-            return new FailRespDto("9999", "인증에 실패하였습니다.");
-        }
-
-        StudentRespDto studentRespDto = studentService.조회(userData.userId());
-        if(Do.비었음(studentRespDto))
-        {
-            return new FailRespDto("9999", "인증에 실패하였습니다.");
-        }
-
-        Account publicAccount = accountService.findAccountById(Long.parseLong(studentRespDto.userId()), ContractType.PUBLIC);
-
-        if(Do.비었음(publicAccount))
-        {
-            return new FailRespDto("9999", "인증에 실패하였습니다.");
-        }
-
-        SchoolRespDto schoolRespDto = schoolService.인증(publicAccount);
-
-        if(Do.비었음(schoolRespDto)){
-            return new FailRespDto("9999", "인증에 실패하였습니다.");
-        }
-
-        if(!schoolRespDto.schoolName().equals(userData.school())) {
-            return new FailRespDto("9999", "인증에 실패하였습니다.");
-        }
-
-        return new SuccessRespDto("인증이 완료되었습니다.");
-    }
 }

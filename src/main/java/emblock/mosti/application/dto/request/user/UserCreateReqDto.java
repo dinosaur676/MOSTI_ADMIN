@@ -3,8 +3,8 @@ package emblock.mosti.application.dto.request.user;
 import emblock.mosti.application.domain.User;
 import emblock.framework.validate.EnumVal;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 public record UserCreateReqDto(
         @NotEmpty(message = "로그인 아이디는 필수값입니다.")

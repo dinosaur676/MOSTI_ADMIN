@@ -12,6 +12,7 @@ import emblock.mosti.application.dto.request.gateway.BurnTokenRequestDto;
 import emblock.mosti.application.dto.request.gateway.CreateTokenRequestDto;
 import emblock.mosti.application.dto.request.gateway.MintTokenRequestDto;
 import emblock.mosti.application.dto.request.token.TokenInfoReqDto;
+import emblock.mosti.application.dto.request.token.TokenTypeReqDto;
 import emblock.mosti.application.dto.response.SchoolRespDto;
 import emblock.mosti.application.dto.response.UserRespDto;
 import emblock.mosti.application.dto.response.token.TokenInfoRespDto;
@@ -20,17 +21,14 @@ import emblock.mosti.application.dto.response.token.UserTokenRespDto;
 import emblock.mosti.application.port.in.*;
 import emblock.mosti.application.security.AuthUser;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@RequestMapping("/api/gateway")
+@RequestMapping("/api/token")
 @RestController
 public class TokenController {
 
@@ -53,21 +51,11 @@ public class TokenController {
         this.studentService = studentService;
     }
 
-    @PostMapping("/token-info")
-    public ResponseDto 발행토큰목록조회_PUBLIC(@RequestBody TokenInfoReqDto reqDto) {
-        Account account = null;
-        long userId = 0;
+    @GetMapping("/token-info")
+    public ResponseDto 발행토큰목록조회(@RequestParam("contractType") Boolean isPublic, @RequestParam("userId") String userId) {
+        ContractType contractType = isPublic ? ContractType.PUBLIC : ContractType.COMMUNITY;
 
-        if(reqDto.userId().equals("")) {
-            AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            userId = Long.parseLong(authUser.getUserId());
-        }
-        else {
-            userId = Long.parseLong(reqDto.userId());
-        }
-
-        ContractType contractType = ContractType.getContractType(reqDto.contractType().charAt(0));
-        account = accountService.findAccountById(userId, contractType);
+        Account account = accountService.findAccountById(Long.parseLong(userId), contractType);
 
         List<TokenInfoRespDto> respDtoList = tokenControlService.발행한토큰목록조회(account.getAddress(), contractType);
 
@@ -78,21 +66,11 @@ public class TokenController {
         return new SuccessRespDto(respDtoList, "조회가 성공적으로 이루어졌습니다.");
     }
 
-    @PostMapping("/user-token")
-    public ResponseDto 소유토큰목록조회_PUBLIC(@RequestBody TokenInfoReqDto reqDto) {
-        Account account = null;
-        long userId = 0;
+    @GetMapping("/user-token")
+    public ResponseDto 소유토큰목록조회(@RequestParam("contractType") Boolean isPublic, @RequestParam("userId") String userId) {
+        ContractType contractType = isPublic ? ContractType.PUBLIC : ContractType.COMMUNITY;
 
-        if(reqDto.userId().equals("")) {
-            AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            userId = Long.parseLong(authUser.getUserId());
-        }
-        else {
-            userId = Long.parseLong(reqDto.userId());
-        }
-
-        ContractType contractType = ContractType.getContractType(reqDto.contractType().charAt(0));
-        account = accountService.findAccountById(userId, contractType);
+        Account account = accountService.findAccountById(Long.parseLong(userId), contractType);
 
         List<UserTokenRespDto> respDtoList = tokenControlService.사용자소유토큰목록조회(account.getAddress(), contractType);
 
@@ -104,8 +82,8 @@ public class TokenController {
 
     }
 
-    @PostMapping("/token-type")
-    public ResponseDto 토큰타입목록조회_PUBLIC() {
+    @GetMapping("/token-type")
+    public ResponseDto 토큰타입목록조회() {
         List<TokenTypeRespDto> respDtoList = tokenControlService.토큰타입목록조회();
 
         if(respDtoList.isEmpty() || respDtoList == null)
@@ -116,7 +94,15 @@ public class TokenController {
         return new SuccessRespDto(respDtoList, "조회가 성공적으로 완료되었습니다.");
     }
 
-    @PostMapping("/admin-create-token")
+
+    @PostMapping("/token-type")
+    public ResponseDto 토큰타입추가(@Valid @RequestBody TokenTypeReqDto tokenTypeReqDto) {
+        tokenControlService.토큰타입추가(tokenTypeReqDto.description());
+
+        return new SuccessRespDto("추가가 완료되었습니다.");
+    }
+
+    @PostMapping("/admin/token")
     public ResponseDto createTokenInPublic(@Valid @RequestBody CreateTokenRequestDto createTokenRequestDto) {
         AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserRespDto userData = userService.조회(authUser.getLoginId());
@@ -141,7 +127,7 @@ public class TokenController {
         tokenControlService.토큰생성(tokenInfo);
 
         if(createTokenRequestDto.tokenType() == 1) {
-            School school = new School(Long.parseLong(authUser.getUserId()), userData.school(), tokenInfo.getTokenId());
+            School school = new School(userData.school(), tokenInfo.getTokenId());
             schoolService.추가(school);
         }
 
@@ -149,7 +135,7 @@ public class TokenController {
         return new SuccessRespDto("토큰 생성이 완료되었습니다.");
     }
 
-    @PostMapping("/admin-mint-token")
+    @PutMapping("/admin/token")
     public ResponseDto mintTokenInPublic(@Valid @RequestBody MintTokenRequestDto mintTokenRequestDto) {
         AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserRespDto userData = userService.조회(authUser.getLoginId());
@@ -187,7 +173,7 @@ public class TokenController {
         return new SuccessRespDto("토큰 전달이 완료되었습니다.");
     }
 
-    @PostMapping("/admin-burn-token")
+    @DeleteMapping("/admin/token")
     public ResponseDto burnTokenInPublic(@Valid @RequestBody BurnTokenRequestDto burnTokenRequestDto) {
 
         AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -223,7 +209,7 @@ public class TokenController {
 
     }
 
-    @PostMapping("/user-create-token")
+    @PostMapping("/user/token")
     public ResponseDto createTokenInCommunity(@Valid @RequestBody CreateTokenRequestDto createTokenRequestDto) {
         //Role 체크
         AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -241,7 +227,7 @@ public class TokenController {
         return new SuccessRespDto("토큰 생성이 완료되었습니다.");
     }
 
-    @PostMapping("/user-mint-token")
+    @PutMapping("/user/token")
     public ResponseDto mintTokenInCommuity(@Valid @RequestBody MintTokenRequestDto mintTokenRequestDto) {
         AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserRespDto userData = userService.조회(authUser.getLoginId());
@@ -278,7 +264,7 @@ public class TokenController {
         return new SuccessRespDto("토큰 전달이 완료되었습니다.");
     }
 
-    @PostMapping("/user-burn-token")
+    @DeleteMapping("/user/token")
     public ResponseDto burnTokenInCommunity(@Valid @RequestBody BurnTokenRequestDto burnTokenRequestDto) {
 
         Account toAccount = accountService.findAccountById(Long.parseLong(burnTokenRequestDto.userId()), ContractType.COMMUNITY);
@@ -303,14 +289,6 @@ public class TokenController {
         tokenControlService.사용자토큰삭제(userToken);
 
         return new SuccessRespDto("토큰 삭제가 완료되었습니다.");
-
-    }
-
-    private boolean isRoleCheck(User.UserType type) {
-        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserRespDto userData = userService.조회(authUser.getLoginId());
-
-        return userData.type() == type;
     }
 
 }

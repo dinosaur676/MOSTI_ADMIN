@@ -32,7 +32,13 @@ public class AuthUser implements UserDetails {
         this.menuRoleMappingList = menuRoleMappingList;
     }
 
-    public static AuthUser 생성(User user,List<MenuRoleMapping> menuRoleMappingList) {
+    public AuthUser(String userName, String password, List<MenuRoleMapping> menuRoleMappingList) {
+        this.userName = userName;
+        this.password = password;
+        this.menuRoleMappingList = menuRoleMappingList;
+    }
+
+    public static AuthUser 생성(User user, List<MenuRoleMapping> menuRoleMappingList) {
        return new AuthUser(user.getUserName()
                          , user.getLoginId()
                          , user.getEmail()

@@ -1,8 +1,5 @@
 import {logic} from "./logic.js"
 
-const tokenTypes = logic.getTokenTypes();
-
-
 const gridMaster = {
     view: "datatable",
     id: "dtMaster",
@@ -27,12 +24,9 @@ const gridMaster = {
                 this.hideOverlay();
         },
         onAfterSelect: function (cell) {
-            $$("frmMaster").clearValidation();
-            //console.log(cell);
+
         },
         onItemClick: function (id, e, trg) {
-            //console.log(id);
-            $$("status").refresh();
 
         },
         onSelectChange: function() {

@@ -11,16 +11,11 @@ import emblock.mosti.application.domain.User;
 import emblock.mosti.application.dto.request.user.UserCreateReqDto;
 import emblock.mosti.application.dto.request.user.UserUpdateReqDto;
 import emblock.mosti.application.dto.response.UserRespDto;
-import emblock.mosti.application.port.in.IAccountService;
-import emblock.mosti.application.port.in.IGatewayService;
-import emblock.mosti.application.port.in.IStudentService;
-import emblock.mosti.application.port.in.IUserService;
-import emblock.mosti.application.security.AuthUser;
-import org.springframework.security.core.context.SecurityContextHolder;
+import emblock.mosti.application.port.in.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -33,25 +28,29 @@ public class UserController {
 
     private final IStudentService studentService;
 
+    private final ILogService logService;
+
     public UserController(IUserService userService, IGatewayService gatewayService,
-                          IAccountService accountService, IStudentService studentService) {
+                          IAccountService accountService, IStudentService studentService, ILogService logService) {
         this.userService = userService;
         this.gatewayService = gatewayService;
         this.accountService = accountService;
         this.studentService = studentService;
+        this.logService = logService;
     }
 
 
     @GetMapping
     public ResponseDto 목록조회(Model model, Principal principal){
-        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserRespDto respDto = userService.조회(authUser.getLoginId());
 
-
-        String school = "";
-        if(respDto.type() == User.UserType.B)
-            school = respDto.school();
-
+        List<UserRespDto> userList = this.userService.목록조회("");
+        if(userList == null || userList.isEmpty() ) {
+            throw new EmptyListException("NO DATA");
+        }
+        return new SuccessRespDto(userList, "사용자 조회가 성공적으로 완료되었습니다.");
+    }
+    @GetMapping("/{school}")
+    public ResponseDto 학교로목록조회(@PathVariable String school){
         List<UserRespDto> userList = this.userService.목록조회(school);
         if(userList == null || userList.isEmpty() ) {
             throw new EmptyListException("NO DATA");
@@ -83,6 +82,8 @@ public class UserController {
             accountService.addAccount(newAccount, ContractType.PUBLIC);
         }
 
+
+        logService.추가(user.getUserId(), "SignUp");
         return new SuccessRespDto("사용자 등록이 성공적으로 완료되었습니다.");
     }
 
@@ -97,7 +98,13 @@ public class UserController {
         long id = Long.parseLong(userId);
         this.accountService.deleteAccount(id, ContractType.PUBLIC);
         this.studentService.삭제(id);
+
+
+        //외래키로 제일 마지막에 삭제
         this.userService.삭제(id);
+
+        //Log
+        this.logService.추가(id, "Delete");
 
         return new SuccessRespDto("사용자 삭제가 성공적으로 완료되었습니다.");
     }

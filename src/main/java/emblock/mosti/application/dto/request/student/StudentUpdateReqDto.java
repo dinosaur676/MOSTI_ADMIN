@@ -1,6 +1,6 @@
 package emblock.mosti.application.dto.request.student;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public record StudentUpdateReqDto (
     @NotEmpty(message = "이름은 필수값입니다.")

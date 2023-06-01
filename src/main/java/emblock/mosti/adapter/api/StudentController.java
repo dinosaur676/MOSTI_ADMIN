@@ -3,7 +3,7 @@ package emblock.mosti.adapter.api;
 import java.security.Principal;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.beust.ah.A;
 import emblock.framework.dto.FailRespDto;

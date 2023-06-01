@@ -1,7 +1,7 @@
 package emblock.mosti.application.dto.request.gateway;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public record CreateTokenRequestDto(
     @NotNull(message = "토큰 타입은 필수 입니다.")

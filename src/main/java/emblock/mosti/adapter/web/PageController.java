@@ -1,5 +1,8 @@
 package emblock.mosti.adapter.web;
 
+import emblock.mosti.application.domain.TokenInfo;
+import emblock.mosti.application.dto.request.user.UserLoginDto;
+import emblock.mosti.application.security.jwt.JWTInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -8,10 +11,12 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
 @Controller
@@ -41,6 +46,17 @@ public class PageController {
         return "login";
     }
 
+    @GetMapping("/log")
+    String viewLog(Model model) {
+        return "log";
+    }
+
+    @GetMapping("/notice")
+    String viewNotice(Model model) {
+        return "notice";
+    }
+
+
     @GetMapping("/logout")
     String viewLogout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -62,6 +78,13 @@ public class PageController {
         //log.debug(LogHelper.printEntity(principal))
         return "user";
     }
+
+    @GetMapping("/school")
+    String schoolView(Model model, Principal principal){
+        //log.debug(LogHelper.printEntity(principal))
+        return "school";
+    }
+
     @GetMapping("/certified")
     String certifiedView(Model model, Principal principal){
         //log.debug(LogHelper.printEntity(principal))
@@ -88,7 +111,6 @@ public class PageController {
     String tokenInfoView() {
         return "token_info";
     }
-
 
 
 }

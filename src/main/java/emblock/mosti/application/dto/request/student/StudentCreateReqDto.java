@@ -1,6 +1,6 @@
 package emblock.mosti.application.dto.request.student;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public record StudentCreateReqDto (
     @NotEmpty

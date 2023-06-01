@@ -12,7 +12,6 @@ public class SchoolRowMapper implements RowMapper<School> {
     @Override
     public School mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new School(
-                rs.getLong("user_id"),
                 rs.getString("school_name"),
                 rs.getLong("school_token_id")
         );

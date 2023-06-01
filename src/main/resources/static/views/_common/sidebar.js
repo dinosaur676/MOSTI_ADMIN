@@ -4,7 +4,7 @@ export const sidebar = {
 	id: "sidebar1",
 	css: "webix_dark darkSidebar",
 	select: true,
-	width: 200,
+	width: 210,
 	data: convertMenuList(userInfo.menuRoleMappingList),
 
 	submenuConfig:{

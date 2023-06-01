@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class School {
-    private long userId;
     private String schoolName;
     private long schoolTokenId;
 
@@ -22,12 +21,7 @@ public class School {
         return createdOn;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public School(long userId, String schoolName, long schoolTokenId) {
-        this.userId = userId;
+    public School(String schoolName, long schoolTokenId) {
         this.schoolName = schoolName;
         this.schoolTokenId = schoolTokenId;
         this.createdOn = LocalDateTime.now();

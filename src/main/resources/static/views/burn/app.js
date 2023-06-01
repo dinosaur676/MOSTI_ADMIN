@@ -31,15 +31,9 @@ const studentGridMaster = {
         },
         onItemClick: function (id, e, trg) {
             var record = $$("studentTable").getItem(id.row);
-            const param = {
+            userId = record.userId;
 
-                "userId": record.userId,
-                "contractType": "P"
-            }
-
-            userId = param.userId;
-
-            logic.selectTokens(param);
+            logic.selectTokens(record.userId);
         },
         onSelectChange: function() {
         }

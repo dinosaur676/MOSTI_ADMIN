@@ -2,7 +2,7 @@ package emblock.mosti.application.dto.request.token;
 
 import emblock.mosti.adapter.blockchain.ContractType;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public record TokenRequestDto(
         @NotEmpty

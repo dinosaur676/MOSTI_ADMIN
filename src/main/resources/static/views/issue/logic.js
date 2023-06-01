@@ -1,11 +1,11 @@
 export const logic = {
     init: function(){
         this.selectStudents();
-        this.selectTokens();
+        this.selectTokens(userInfo.userId);
     },
 
     selectStudents: function (params) {
-        const promise = issueService.callStudentAPIWithParamGet("", params);
+        const promise = studentService.search(params);
         //console.log(promise);
         promise.then(function (json) {
             //success
@@ -22,15 +22,8 @@ export const logic = {
         });
     },
 
-    selectTokens: function (params) {
-        if(params == null)
-        {
-            params = {
-                "userId" : "",
-                "contractType": "P"
-            }
-        }
-        const promise = issueService.callTokenAPIWithParam("/token-info", params);
+    selectTokens: function (userId) {
+        const promise = tokenService.getTokenInfo(userId, true);
         //console.log(promise);
         promise.then(function (json) {
             //success
@@ -48,7 +41,7 @@ export const logic = {
     },
     
     mintToken: function (params) {
-        const promise = issueService.callTokenAPIWithParam("/admin-mint-token", params);
+        const promise = tokenService.mintTokenInPublic(params);
 
         promise.then(function (json) {
 

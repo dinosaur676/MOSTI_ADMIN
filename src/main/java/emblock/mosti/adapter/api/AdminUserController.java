@@ -24,14 +24,14 @@ import java.util.List;
 public class AdminUserController {
     public static final Logger logger = LoggerFactory.getLogger(AdminUserController.class);
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private final IAdminUserService adminUserService;
 
-    public AdminUserController(IAdminUserService adminUserService) {
+    public AdminUserController(IAdminUserService adminUserService, PasswordEncoder passwordEncoder) {
         Assert.notNull(adminUserService, "adminUserService 개체가 반드시 필요!");
         this.adminUserService = adminUserService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping()

@@ -10,6 +10,8 @@ import emblock.mosti.application.port.out.ISchoolRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class SchoolRepository implements ISchoolRepository {
 
@@ -19,6 +21,11 @@ public class SchoolRepository implements ISchoolRepository {
     public SchoolRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcCommand = new JdbcCommand(jdbcTemplate);
         this.jdbcQuery = new JdbcQuery<>(jdbcTemplate, new SchoolRowMapper());
+    }
+
+    @Override
+    public List<School> 학교목록조회() {
+        return jdbcQuery.목록조회(SchoolRepositorySQL.학교목록조회);
     }
 
     @Override
@@ -32,8 +39,18 @@ public class SchoolRepository implements ISchoolRepository {
     }
 
     @Override
+    public void 학교이름수정(School school) {
+        jdbcCommand.실행(SchoolRepositorySQL.학교이름수정, school.getSchoolName(), school.getSchoolTokenId());
+    }
+
+    @Override
+    public void 학교삭제(School school) {
+        jdbcCommand.실행(SchoolRepositorySQL.학교삭제, school.getSchoolName());
+    }
+
+    @Override
     public void 추가(School school) {
-        jdbcCommand.실행(SchoolRepositorySQL.추가, school.getUserId(), school.getSchoolName(), school.getSchoolTokenId(), school.getCreatedOn());
+        jdbcCommand.실행(SchoolRepositorySQL.추가,  school.getSchoolName(), school.getSchoolTokenId(), school.getCreatedOn());
     }
 
     @Override

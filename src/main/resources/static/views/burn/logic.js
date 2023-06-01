@@ -4,7 +4,7 @@ export const logic = {
     },
 
     selectStudents: function (params) {
-        const promise = burnService.callStudentAPIWithParamGet("", params);
+        const promise = studentService.search(params);
         //console.log(promise);
         promise.then(function (json) {
             //success
@@ -21,8 +21,8 @@ export const logic = {
         });
     },
 
-    selectTokens: function (params) {
-        const promise = burnService.callTokenAPIWithParam("/user-token", params);
+    selectTokens: function (userId) {
+        const promise = tokenService.getUserToken(userId, true);
         //console.log(promise);
         promise.then(function (json) {
             //success
@@ -41,7 +41,7 @@ export const logic = {
     },
     
     burnToken: function (params) {
-        const promise = burnService.callTokenAPIWithParam("/admin-burn-token", params);
+        const promise = tokenService.burnTokenInPublic(params);
 
         promise.then(function (json) {
 

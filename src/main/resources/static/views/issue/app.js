@@ -1,22 +1,5 @@
 import {logic} from "./logic.js"
 
-const datas = {
-    student: {
-        userId: "",
-        userName: "",
-        studentId: "",
-        school: "",
-        major: "",
-    },
-    token: {
-        tokenId: "",
-        tokenOwnerName: "",
-        type: "",
-        metaData: "",
-    }
-}
-
-let clickedToken = null;
 
 const studentGridMaster = {
     view: "datatable",
@@ -43,16 +26,11 @@ const studentGridMaster = {
                 this.hideOverlay();
         },
         onAfterSelect: function (cell) {
-            $$("frmMaster").clearValidation();
             //console.log(cell);
         },
         onItemClick: function (id, e, trg) {
             var record = $$("studentTable").getItem(id.row);
-            datas.student.userId = record.userId;
-            datas.student.studentId = record.studentId;
-            datas.student.major = record.major;
-            datas.student.userName = record.userName;
-            datas.student.school = record.school;
+            $$("mintForm").elements["userId"].setValue(record.userId);
         },
         onSelectChange: function() {
 
@@ -88,10 +66,8 @@ const tokenGridMaster = {
         },
         onItemClick: function (id, e, trg) {
             var record = $$("tokenTable").getItem(id.row);
-            datas.token.tokenId = record.tokenId;
-            datas.token.tokenOwnerName = record.tokenOwnerName;
-            datas.token.type = record.type;
-            datas.token.metaData = record.metaData;
+            $$("mintForm").elements["tokenId"].setValue(record.tokenId);
+
         },
         onSelectChange: function() {
 
@@ -125,61 +101,29 @@ const ctrlView = {
         },
     ]
 };
-const popup_form = {
+
+const mintForm = {
     view: "form",
-    id: "frmMaster",
+    id: "mintForm",
     scroll: true,
     elementsConfig: { labelWidth: 100, labelAlign: "right" },
     elements:
         [
-            {template: "학생 정보", height: 32, css:"ctrlTitle" },
-            {view: "text", id:"userId", name: "userId", label: "Id"},
-            {view: "text", id:"userName", name: "userName", label: "이름", disabled: true},
-            {view: "text", id:"studentId", name: "studentId", label: "학번", disabled: true},
-            {view: "text", id:"school", name: "school", label: "학교", disabled: true},
-            {view: "text", id:"major", name: "major", label: "학과", disabled: true},
-
-            { template: "토큰 정보", height: 32, css:"ctrlTitle" },
-            {view: "text", id:"tokenId", name: "tokenId", label: "토큰 ID"},
-            {view: "text", id:"tokenOwnerName", name: "tokenOwnerName", label: "토큰 소유자", disabled: true},
-            {view: "text", id:"type", name: "type", label: "토큰 타입", disabled: true},
-            {view: "text", id:"metaData", name: "metaData", label: "토큰 정보", height: 400, disabled: true},
+            {view: "text", id:"userId", name: "userId", label: "Id", disabled: true},
+            {view: "text", id:"tokenId", name: "tokenId", label: "토큰 ID", disabled: true},
             {view: "datepicker", id:"deletedOn", label: "만료 기간", value: new Date(9999,1,1 )},
-        ]
-}
-const popup = {
-    view : "window",
-    id: "mint_token_popup",
-    height: 600,
-    width: 600,
-    close: true,
-    position: "center",
-    head: {
-        cols: [
-            {template: "토큰 생성", type: "header", borderless:true},
-            {
-                view: "icon", icon: "wxi_close", tooltip: "닫기", click: function () {
-                    $$("mint_token_popup").close();
+            { view: "button", label: "토큰 지급", type: "form", align: "right",
+                css:"webix_primary",
+                click: function() {
+                    const param = {
+                        "userId": $$("userId").getValue(),
+                        "tokenId": $$("tokenId").getValue(),
+                        "deletedOn": $$("deletedOn").getValue()
+                    }
+                    logic.mintToken(param);
                 }
             },
         ]
-    },
-    body:
-        {
-           rows: [
-               popup_form,
-               {view:"button", id: "createTokenButton", height: 50, value: "토큰 생성",
-                   click: function () {
-                       const param = {
-                           "userId": $$("userId").getValue(),
-                           "tokenId": $$("tokenId").getValue(),
-                           "deletedOn": $$("deletedOn").getValue()
-                       }
-                       logic.mintToken(param);
-                   }
-               }
-           ],
-        }
 
 }
 export const mainView = {
@@ -198,14 +142,9 @@ export const mainView = {
                 { view: "resizer" },
                 {
                     rows: [
-                        { template: "사용자 정보", height: 32, css:"ctrlTitle" },
+                        { template: "토큰 정보", height: 32, css:"ctrlTitle" },
                         tokenGridMaster,
-                        { view: "button", label: "토큰 지급", type: "form", align: "right",
-                            css:"webix_primary",
-                            click: function() {
-                                webix.ui(popup).show();
-                            }
-                        },
+                        mintForm,
                     ]
                 },
             ]
