@@ -1,6 +1,7 @@
 const apiWrapper = {
     ajaxOption: {
         "Content-type": "application/json",
+        "X-CSRF-TOKEN": token
     },
 
     async get(endpoint, params) {

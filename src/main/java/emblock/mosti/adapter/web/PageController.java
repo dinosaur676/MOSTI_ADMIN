@@ -29,7 +29,7 @@ public class PageController {
         return "home";
     }
 
-    @GetMapping("/main")
+    @GetMapping({"/main", "", "/"})
     String mainView(Model model, Principal principal){
         //log.debug(LogHelper.printEntity(principal))
         return "main";

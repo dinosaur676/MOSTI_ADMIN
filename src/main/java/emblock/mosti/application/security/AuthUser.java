@@ -2,13 +2,19 @@ package emblock.mosti.application.security;
 
 import emblock.mosti.application.domain.MenuRoleMapping;
 import emblock.mosti.application.domain.User;
+import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class AuthUser implements UserDetails {
+public class AuthUser implements UserDetails, OidcUser {
     private String userName;
     private String password;
     private String loginId;
@@ -16,11 +22,25 @@ public class AuthUser implements UserDetails {
     private String userId;
     private List<GrantedAuthority> grantedAuthorityList;
     private List<MenuRoleMapping> menuRoleMappingList;
+    private Map<String,Object> claims;
+    private Map<String,Object> attributes;
+    private OidcUserInfo userInfo;
+    private OidcIdToken token;
 
     public AuthUser() {}
     public AuthUser(String userName, String password) {
         this.userName = userName;
         this.password = password;
+    }
+    public AuthUser(String userName, List<MenuRoleMapping> menuRoleMappingList,  OidcUser user){
+        this.userName = userName;
+        this.claims = user.getClaims();
+        this.attributes = user.getAttributes();
+        this.userInfo = user.getUserInfo();
+        this.token = user.getIdToken();
+
+        //this.attributes = attributes;
+        this.menuRoleMappingList = menuRoleMappingList;
     }
 
     public AuthUser(String userName, String loginId, String email, long userId, String password, List<MenuRoleMapping> menuRoleMappingList) {
@@ -72,6 +92,11 @@ public class AuthUser implements UserDetails {
     }
 
     @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.grantedAuthorityList;
     }
@@ -118,5 +143,25 @@ public class AuthUser implements UserDetails {
 
     public void 패스워드지우기(){
         this.password = "";
+    }
+
+    @Override
+    public Map<String, Object> getClaims() {
+        return this.claims;
+    }
+
+    @Override
+    public OidcUserInfo getUserInfo() {
+        return this.userInfo;
+    }
+
+    @Override
+    public OidcIdToken getIdToken() {
+        return this.token;
+    }
+
+    @Override
+    public String getName() {
+        return this.userName;
     }
 }

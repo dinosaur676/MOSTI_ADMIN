@@ -6,6 +6,8 @@ import emblock.framework.exception.DomainException;
 import emblock.framework.exception.EmptyListException;
 import emblock.framework.helper.Do;
 import emblock.mosti.adapter.blockchain.ContractType;
+import emblock.mosti.adapter.keycloak.IKeycloakAdminUserService;
+import emblock.mosti.adapter.keycloak.KeycloakUserService;
 import emblock.mosti.application.domain.Account;
 import emblock.mosti.application.domain.User;
 import emblock.mosti.application.dto.request.user.UserCreateReqDto;
@@ -29,19 +31,25 @@ public class UserController {
     private final IStudentService studentService;
 
     private final ILogService logService;
+    private final IKeycloakAdminUserService keycloakAdminUserService;
+    private final KeycloakUserService keycloakUserService;
 
     public UserController(IUserService userService, IGatewayService gatewayService,
-                          IAccountService accountService, IStudentService studentService, ILogService logService) {
+                          IAccountService accountService, IStudentService studentService, ILogService logService,
+        IKeycloakAdminUserService keycloakAdminUserService, KeycloakUserService keycloakUserService) {
         this.userService = userService;
         this.gatewayService = gatewayService;
         this.accountService = accountService;
         this.studentService = studentService;
         this.logService = logService;
+        this.keycloakAdminUserService = keycloakAdminUserService;
+        this.keycloakUserService = keycloakUserService;
     }
 
 
     @GetMapping
     public ResponseDto 목록조회(Model model, Principal principal){
+        keycloakUserService.users();
 
         List<UserRespDto> userList = this.userService.목록조회("");
         if(userList == null || userList.isEmpty() ) {

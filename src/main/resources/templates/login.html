@@ -49,9 +49,11 @@ webix.ui({
     ]
 });
 
+location.href = '/oauth2/authorization/keycloak'
 $$("login_form").elements["loginId"].focus();
 
 webix.UIManager.addHotKey("enter", function(){
+
 	loginProcess();
 });
 

@@ -9,6 +9,8 @@
 
 <script th:inline="javascript">
   const userInfo = /*[[${#authentication.principal}]]*/;
+  const token = /*[[${_csrf.token}]]*/;
+  const parameterName = /*[[${_csrf.parameterName}]]*/;
 </script>
 
 <script src="/models/api-wrapper.js"></script>

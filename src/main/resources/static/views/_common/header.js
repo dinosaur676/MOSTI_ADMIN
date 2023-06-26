@@ -64,7 +64,16 @@ export const appHeader = {
 		},
 		{
 			view: "button", id: "logout_btn", label: "", type: "icon", icon: "mdi mdi-logout", width: 60, height: 40,
-			click: "location.href='/page/logout'"
+			click: async () => {
+				const promise = await apiWrapper.post('/oauth2/logout', {
+					"Content-type": "application/json",
+							"X-CSRF-TOKEN": token
+				})
+				if(promise.status === '00'){
+					window.location.href = '/'
+				}
+			}
+
 		},
 	]
 };

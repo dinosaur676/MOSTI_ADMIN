@@ -1,6 +1,9 @@
 package emblock.mosti.application.security;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +21,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -57,10 +62,66 @@ public class AuthUserService implements UserDetailsService {
         return createAuthUser(user, menuRoleMappingList, role, user.getType().name());
     }
 
-    private AuthUser createAuthUser(User user, List<MenuRoleMapping> menuRoleMappingList, String... role) {
+   /* public OAuth2User loadUserByOauth2User(OAuth2User user) throws UsernameNotFoundException {
+
+        HttpSession session = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        System.out.println(user.getAttributes());
+
+        if (Do.비었음(user))
+            throw new UsernameNotFoundException("User " + user.getName() + " does not exists");
+
+        int roleId = user.getAttribute("roleId");
+        List<MenuRoleMapping> menuRoleMappingList = this.menuService.사용자별메뉴조회(roleId);
+        List<ApiRoleMapping> apiRoleMappingList = this.menuService.사용자별api리스트조회(roleId);
+
+        session.setAttribute("apiAuthorityList", apiRoleMappingList);
+
+        return createAuthUser(user, menuRoleMappingList, user.getAttribute("role"));
+    }*/
+
+    public OidcUser loadUserByOidcUser(OidcUser user) throws UsernameNotFoundException {
+        HttpSession session = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        System.out.println(user.getAttributes());
+
+        if (Do.비었음(user))
+            throw new UsernameNotFoundException("User " + user.getName() + " does not exists");
+
+        int roleId = user.getAttribute("roleId");
+        List<MenuRoleMapping> menuRoleMappingList = this.menuService.사용자별메뉴조회(roleId);
+        List<ApiRoleMapping> apiRoleMappingList = this.menuService.사용자별api리스트조회(roleId);
+
+        session.setAttribute("apiAuthorityList", apiRoleMappingList);
+        var userInfo = user.getUserInfo();
+        Collection<String> roles = new ArrayList<>();
+        if (userInfo.hasClaim("realm_access")) {
+            var realmAccess = userInfo.getClaimAsMap("realm_access");
+            roles = (Collection<String>) realmAccess.get("roles");
+        }
+        if (userInfo.hasClaim("resource_access")&& user.getIdToken().hasClaim("azp")) {
+            var clientId = user.getIdToken().getClaimAsString("azp");
+            var resourceAccess = userInfo.getClaimAsMap("resource_access");
+            var client = (Map<String,Collection<String>>)resourceAccess.get(clientId);
+            roles.addAll(client.get("roles"));
+        }
+
+        return createAuthUser(user, menuRoleMappingList, roles);
+    }
+
+    private AuthUser createAuthUser(User user, List<MenuRoleMapping> menuRoleMappingList,String... role) {
         return AuthUser.생성(user, menuRoleMappingList)
                 .withGrantedAuthorityList(Arrays.stream(role)
+                    .map(s->"ROLE_"+s)
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList()));
     }
+
+    private AuthUser createAuthUser(OidcUser user, List<MenuRoleMapping> menuRoleMappingList,Collection<String> roles) {
+        var u =  new AuthUser(user.getName(), menuRoleMappingList, user)
+                       .withGrantedAuthorityList(roles.stream()
+                           .map(s->"ROLE_"+s)
+                                                       .map(SimpleGrantedAuthority::new)
+                                                       .collect(Collectors.toList()));
+        return u;
+    }
+
 }

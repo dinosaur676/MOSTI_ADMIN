@@ -1,4 +1,12 @@
 spring:
+  thymeleaf:
+    cache: false
+  web:
+    resources:
+      static-locations: classpath:/static/
+      cache:
+        cache-control:
+          max-age: 0
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     jdbc-url: jdbc:mysql://172.30.1.157:3306/mosti
@@ -13,12 +21,41 @@ spring:
       minimum-idle: 1
       max-lifetime: 580000
 
-  devtools:
-    livereload:
-      enabled: true
   output:
     ansi:
       enabled: DETECT
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: mosti-dev-admin-client
+            authorization-grant-type: authorization_code
+            #redirect-uri: http://localhost:8190/login/oauth2/code/keycloak
+            client-secret: B2cyseDu0fPnkz0SGgi0iyqSNaMhA49d
+            scope:
+              - openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8443/realms/mosti-dev
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8443/realms/mosti-dev
+
+keycloak-initializer:
+  initializeOnStartup: false
+  masterRealm: master
+  applicationRealm: mosti-dev
+  client-id: admin-cli
+  username: mostidevadmin
+  password: 1
+  url: http://172.30.1.157:8443/auth/
+
+keycloak-admin-base-url: http://172.30.1.157:8443
+keycloak-admin-id: mostidevadmin
+keycloak-admin-password: 1
+
 
 base-url: http://localhost:8390
 expiration: 5 #분단위
@@ -28,7 +65,7 @@ expiration: 5 #분단위
 logging:
   config: classpath:logback-dev.xml
   level:
-    root: INFO
+    root: debug
 
 log:
   config:
@@ -55,3 +92,5 @@ gateway:
 #   secret-key: XE6tAhQqXt5kQWFVcigRBPjaqmw2pjyVfhcbeGhFGhCHM2MysU7YV92jCXGkqw3484XiS8VFc3qssszWSsvfGh6JR28MfJHZH9cDqHLKU5xXztgfMiB2DzekKjZ78RYr
 #   environment-id: 1666842943529636665
 
+app:
+  authorized-redirect-url: http://localhost:5173/auth
