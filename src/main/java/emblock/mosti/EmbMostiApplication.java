@@ -9,5 +9,4 @@ public class EmbMostiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EmbMostiApplication.class, args);
 	}
-
 }

@@ -37,11 +37,11 @@ spring:
               - openid
         provider:
           keycloak:
-            issuer-uri: http://localhost:8443/realms/mosti-dev
+            issuer-uri: http://172.30.1.157:8443/realms/mosti-dev
             user-name-attribute: preferred_username
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8443/realms/mosti-dev
+          issuer-uri: http://172.30.1.157:8443/realms/mosti-dev
 
 keycloak-initializer:
   initializeOnStartup: false
