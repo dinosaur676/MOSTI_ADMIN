@@ -25,6 +25,11 @@ public class Gateway {
 
     public enum API {
         CREATE_ACCOUNT("/accounts", HttpMethod.POST, ""),
+        ADMIN_OWNER("/sbts/admin-owner", HttpMethod.POST, """
+                {
+                    "tokenId" : %d
+                }
+                """),
         ADMIN_BALANCE("/sbts/admin-balance", HttpMethod.POST, """
                   {
                     "to" : \"%s\",
@@ -109,6 +114,9 @@ public class Gateway {
 
     private String getBodyJson(API api, Map<String, String> param) {
         return switch (api) {
+            case ADMIN_OWNER ->
+                    api.ADMIN_OWNER.getJsonFormat().formatted(
+                            Long.parseLong(param.get("tokenId")));
             case ADMIN_CREATE_TOKEN ->
                     api.ADMIN_CREATE_TOKEN.getJsonFormat().formatted(
                             param.get("tokenOwner"),

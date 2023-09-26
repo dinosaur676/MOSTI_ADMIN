@@ -1,31 +1,75 @@
 package emblock.mosti.application.domain;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class UserToken {
-    private String address;
-    TokenInfo tokenInfo;
-    private LocalDateTime deletedOn;
+    long tokenId;
+    long id;
 
-    public UserToken(String address, TokenInfo tokenInfo, LocalDateTime deletedOn) {
-        this.address = address;
-        this.tokenInfo = new TokenInfo(
-                tokenInfo.getTokenId(),
-                tokenInfo.getType(),
-                tokenInfo.getMetaData(),
-                tokenInfo.getTokenOwner(),
-                tokenInfo.getContractType(),
-                LocalDateTime.now()
-        );
+    String metaData;
+
+    String walletName;
+    String walletTag;
+    String userName;
+
+
+    LocalDateTime createdOn;
+    LocalDateTime deletedOn;
+
+    public UserToken(long tokenId, long id, String metaData, String walletName, String walletTag, String userName, LocalDateTime createdOn, LocalDateTime deletedOn) {
+        this.tokenId = tokenId;
+        this.id = id;
+        this.metaData = metaData;
+        this.walletName = walletName;
+        this.walletTag = walletTag;
+        this.userName = userName;
+        this.createdOn = createdOn;
         this.deletedOn = deletedOn;
     }
 
-    public String getAddress() {
-        return address;
+    public UserToken(long tokenId, String walletName, String walletTag, String userName, LocalDateTime createdOn, LocalDateTime deletedOn) {
+        this.tokenId = tokenId;
+        this.walletName = walletName;
+        this.walletTag = walletTag;
+        this.userName = userName;
+        this.createdOn = createdOn;
+        this.deletedOn = deletedOn;
     }
 
-    public TokenInfo getTokenInfo() {
-        return tokenInfo;
+    public UserToken(String walletName, String walletTag, String userName) {
+        this.walletName = walletName;
+        this.walletTag = walletTag;
+        this.userName = userName;
+    }
+
+    public long getTokenId() {
+        return tokenId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getMetaData() {
+        return metaData;
+    }
+
+    public String getWalletName() {
+        return walletName;
+    }
+
+    public String getWalletTag() {
+        return walletTag;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 
     public LocalDateTime getDeletedOn() {

@@ -1,6 +1,8 @@
 package emblock.mosti.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import emblock.mosti.application.domain.User;
+import emblock.mosti.application.security.AuthUser;
 import emblock.mosti.application.security.jwt.JWTFilter;
 import emblock.mosti.application.security.jwt.JWTProvider;
 import emblock.mosti.application.security.jwt.filter.UserLoginFailureCustomHandler;
@@ -17,6 +19,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -80,32 +83,28 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         //http.headers().frameOptions().sameOrigin(); // 동일 도메인에서 iframe 접근 가능
-        http.csrf().disable()
-                .authorizeHttpRequests()
+        http.authorizeHttpRequests()
                 .requestMatchers("/api/admin-users/**", "/api/third/**").permitAll()
                 .requestMatchers("/assets/**", "/models/**", "/views/**").permitAll()
                 .requestMatchers(VALID_API, LOGIN_PAGE, "/page/home").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new MyCustomDsl())
-                .and()
-                .httpBasic().disable()
-                .formLogin().disable()// 로그인 설정
-//                .loginPage(LOGIN_PAGE)
-//                .loginProcessingUrl(LOGIN_PAGE)
-//                .usernameParameter("loginId")
-//                .failureUrl(LOGIN_PAGE + "?error=true")
-//                //.defaultSuccessUrl(DEFAULT_PAGE, true)
-//                .successHandler((request, response, authentication) -> {
-//                    ((AuthUser) authentication.getPrincipal()).패스워드지우기();
-//                    response.sendRedirect(
-//                            authentication.getAuthorities().contains(new SimpleGrantedAuthority(User.UserType.A.getCodeName())) ? USER_PAGE :
-//                                    authentication.getAuthorities().contains(new SimpleGrantedAuthority(User.UserType.B.getCodeName())) ? SCHOOL_PAGE : CERTIFIED_PAGE);
-//                })
-//            .failureHandler(authenticationFailureHandler())
-//                .permitAll()
-//                .and() // 로그아웃 설정
+                .formLogin()// 로그인 설정
+                .loginPage(LOGIN_PAGE)
+                .loginProcessingUrl(LOGIN_PAGE)
+                .usernameParameter("loginId")
+                .failureUrl(LOGIN_PAGE + "?error=true")
+                //.defaultSuccessUrl(DEFAULT_PAGE, true)
+                .successHandler((request, response, authentication) -> {
+                    ((AuthUser) authentication.getPrincipal()).패스워드지우기();
+                    response.sendRedirect(
+                            authentication.getAuthorities().contains(new SimpleGrantedAuthority(User.UserType.A.getCodeName())) ? USER_PAGE :
+                                    authentication.getAuthorities().contains(new SimpleGrantedAuthority(User.UserType.B.getCodeName())) ? SCHOOL_PAGE : CERTIFIED_PAGE);
+                })
+                //.failureHandler(authenticationFailureHandler())
+                .permitAll()
+                .and() // 로그아웃 설정
                 .logout()
                 .logoutUrl("/page/logout")
                 .logoutSuccessUrl("/page/login?logout=true")
@@ -124,10 +123,10 @@ public class SecurityConfig {
     public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
 
         @Override
-        public void configure(HttpSecurity http)  {
+        public void configure(HttpSecurity http) {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class); //스프링 시큐리티 필터내에 cors 관련 필터가 있음!! 그래서 제공해주는 필터 객체를 생성후 HttpSecurity에 등록!
 
-            http.addFilterBefore(new UsernamePasswordAuthenticationCustomFilter(authenticationManager, objectMapper , successHandler, failureHandler),
+            http.addFilterBefore(new UsernamePasswordAuthenticationCustomFilter(authenticationManager, objectMapper, successHandler, failureHandler),
                     UsernamePasswordAuthenticationFilter.class);
             http.addFilter(new JWTFilter(authenticationManager, jwtProvider));
 

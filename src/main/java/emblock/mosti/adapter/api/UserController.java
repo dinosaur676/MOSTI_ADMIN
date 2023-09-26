@@ -70,7 +70,7 @@ public class UserController {
     public ResponseDto 추가(@Valid @RequestBody UserCreateReqDto reqDto, Principal principal){
         User user = this.userService.추가(reqDto);
         if(reqDto.type() == User.UserType.B) {
-            Account newAccount = gatewayService.createAccount();
+            Account newAccount = null; //= gatewayService.createAccount();
 
             if(Do.비었음(newAccount))
             {

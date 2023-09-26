@@ -4,56 +4,38 @@ import java.time.LocalDateTime;
 
 public class TokenInfo {
 
-    private long tokenId;
-    private String type;
-    private String metaData;
-    private String tokenOwner;
-    private char contractType;
-    private LocalDateTime createdOn;
+    long tokenId;
+    String metaData;
+    String userName;
+    LocalDateTime createdOn;
 
-    public TokenInfo(long tokenId, String type, String metaData, String tokenOwner, char contractType) {
+    public TokenInfo(long tokenId, String metaData, String userName, LocalDateTime createdOn) {
         this.tokenId = tokenId;
-        this.type = type;
         this.metaData = metaData;
-        this.tokenOwner = tokenOwner;
-        this.contractType = contractType;
-        this.createdOn = LocalDateTime.now();
+        this.userName = userName;
+        this.createdOn = createdOn;
     }
 
-    public TokenInfo(long tokenId, String type, String metaData, String tokenOwner, char contractType, LocalDateTime createdOn) {
+    public TokenInfo(long tokenId, String metaData, String userName) {
         this.tokenId = tokenId;
-        this.type = type;
         this.metaData = metaData;
-        this.tokenOwner = tokenOwner;
-        this.contractType = contractType;
-        this.createdOn = createdOn;
+        this.userName = userName;
+        this.createdOn = LocalDateTime.now();
     }
 
     public long getTokenId() {
         return tokenId;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public String getMetaData() {
         return metaData;
     }
 
-    public String getTokenOwner() {
-        return tokenOwner;
-    }
-
-    public char getContractType() {
-        return contractType;
+    public String getUserName() {
+        return userName;
     }
 
     public LocalDateTime getCreatedOn() {
         return createdOn;
-    }
-
-    public void createdCurrentTime() {
-        createdOn = LocalDateTime.now();
     }
 }

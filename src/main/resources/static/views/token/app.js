@@ -51,6 +51,14 @@ const formMaster = {
                 webix.ui(popup).show();
             }
         },
+        { view: "button", label: "토큰 발행", type: "form", align: "right",
+            css:"webix_primary",
+            click: function() {
+                //$$("tokenType").define("options", logic.getTokenTypes());
+                //$$("tokenType").refresh();
+                webix.ui(popup_mint).show();
+            }
+        },
     ],
     rules:{
         /*loginId: function (value){
@@ -84,6 +92,43 @@ const formMaster = {
     }
 };
 
+const popup_mint = {
+    view : "window",
+    id: "create_token_popup",
+    height: 600,
+    width: 600,
+    close: true,
+    position: "center",
+    head: {
+        cols: [
+            {template: "토큰 발행", type: "header", borderless:true},
+            {
+                view: "icon", icon: "wxi_close", tooltip: "닫기", click: function () {
+                    $$("create_token_popup").close();
+                }
+            },
+        ]
+    },
+    body: {
+        id: "popup_body",
+        rows: [
+            {view: "text", id:"tokenId", label: "", height: 100, placeholder: "토큰 id", required: true},
+            {view: "text", id:"userName", label: "", height: 100, placeholder: "발행할 사람 이메일", required: true},
+            {view:"button", id: "createTokenButton", height: 50, value: "토큰 생성",
+                click: function () {
+                    const param = {
+                        "userName" : $$("userName").getValue(),
+                        "tokenId" : $$("tokenId").getValue()
+                    }
+
+                    logic.mintToken(param);
+                }
+            }
+
+        ]
+    }
+}
+
 const popup = {
     view : "window",
     id: "create_token_popup",
@@ -105,12 +150,10 @@ const popup = {
         id: "popup_body",
         rows: [
             {view: "text", id:"metaData", label: "", height: 400, placeholder: "토큰 정보", required: true},
-            {view: "text", id:"tokenType", type: "number", name: "tokenType", label: "토큰 종류", required: true},
             {view:"button", id: "createTokenButton", height: 50, value: "토큰 생성",
                 click: function () {
                     const param = {
                         "metaData" : $$("metaData").getValue(),
-                        "tokenType" : parseInt($$("tokenType").getValue())
                     }
                     logic.createToken(param);
                 }

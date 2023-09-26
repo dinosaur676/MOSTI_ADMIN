@@ -40,17 +40,13 @@ public class StudentController {
     private final IStudentService studentService;
     private final IGatewayService gatewayService;
     private final IAccountService accountService;
-    private final ITokenControlService tokenControlService;
     private final ISchoolService schoolService;
     private final IUserService userService;
 
-    public StudentController(IStudentService studentService, IGatewayService gatewayService,
-                             IAccountService accountService, ITokenControlService tokenControlService,
-                             ISchoolService schoolService, IUserService userService) {
+    public StudentController(IStudentService studentService, IGatewayService gatewayService, IAccountService accountService, ISchoolService schoolService, IUserService userService) {
         this.studentService = studentService;
         this.gatewayService = gatewayService;
         this.accountService = accountService;
-        this.tokenControlService = tokenControlService;
         this.schoolService = schoolService;
         this.userService = userService;
     }
@@ -95,19 +91,6 @@ public class StudentController {
             throw new DomainException("이미 존재하는 학생입니다."); //Exception;
         }
 
-
-        Account newAccount = gatewayService.createAccount();
-
-        if(Do.비었음(newAccount))
-        {
-            throw new DomainException("계정 생성 실패");
-        }
-
-        Student newStudent = this.studentService.추가(studentCreateReqDto);
-        newAccount.setUser_id(newStudent.getUserId());
-        newAccount.setCreatedOn(newStudent.getCreatedOn());
-
-        accountService.addAccount(newAccount, ContractType.PUBLIC);
 
         return new SuccessRespDto("학생 등록이 성공적으로 완료되었습니다.");
     }

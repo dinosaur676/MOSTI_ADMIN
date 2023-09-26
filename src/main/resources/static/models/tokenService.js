@@ -3,12 +3,12 @@ const tokenService = {
         base: "/api/token",
     },
 
-    getTokenInfo: function (userId, contractType) {
-        params = {
-            "userId" : userId,
-            "contractType" : contractType
+    getTokenInfo: function () {
+        let params = {
+            "userName": userInfo.name
         };
-        return apiWrapper.get(this.endpoint.base + "/token-info", params);
+
+        return apiWrapper.get(this.endpoint.base + "/info", params);
     },
 
     getUserToken: function (userId, contractType) {
@@ -28,10 +28,10 @@ const tokenService = {
     },
 
     createTokenInPublic: function(params) {
-        return apiWrapper.post(this.endpoint.base + "/admin/token", params);
+        return apiWrapper.post(this.endpoint.base + "/info", params);
     },
     mintTokenInPublic: function(params) {
-        return apiWrapper.put(this.endpoint.base + "/admin/token", params);
+        return apiWrapper.put(this.endpoint.base + "/info", params);
     },
     burnTokenInPublic: function(params) {
         return apiWrapper.delete(this.endpoint.base + "/admin/token", params);

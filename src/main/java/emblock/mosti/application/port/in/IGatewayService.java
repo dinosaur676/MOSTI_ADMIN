@@ -1,5 +1,6 @@
 package emblock.mosti.application.port.in;
 
+import emblock.mosti.adapter.blockchain.GatewayResponse;
 import emblock.mosti.application.domain.Account;
 import emblock.mosti.application.domain.TokenInfo;
 import emblock.mosti.application.domain.UserToken;
@@ -8,15 +9,9 @@ import java.time.LocalDateTime;
 
 public interface IGatewayService {
 
-    Account createAccount();
-
-
+    String onwerOfInPublic(long tokenId);
     int balanceOfInPublic(String to, long tokenId);
-    TokenInfo createTokenInPublic(String tokenOwner, long tokenType, String metaData);
-    UserToken mintTokenInPublic(String tokenOwner, String toAddress, long tokenId, LocalDateTime deletedOn);
-    UserToken burnTokenInPublic(String tokenOwner, String toAddress, long tokenId);
-
-    TokenInfo createTokenInCommunity(String tokenOwner, long tokenType, String metaData);
-    UserToken mintTokenInCommunity(String tokenOwner, String toAddress, long tokenId, LocalDateTime deletedOn);
-    UserToken burnTokenInCommunity(String toAddress, long tokenId);
+    GatewayResponse createTokenInPublic(String tokenOwner, String metaData);
+    GatewayResponse mintTokenInPublic(String tokenOwner, String toAddress, long tokenId, LocalDateTime deletedOn);
+    GatewayResponse burnTokenInPublic(String tokenOwner, String toAddress, long tokenId);
 }

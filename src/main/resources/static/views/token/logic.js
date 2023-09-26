@@ -8,7 +8,7 @@ export const logic = {
     },
 
     selectTokens: function (userId) {
-        const promise = tokenService.getTokenInfo(userId, true);
+        const promise = tokenService.getTokenInfo();
         //console.log(promise);
         promise.then(function (json) {
             //success
@@ -35,7 +35,18 @@ export const logic = {
 
             webix.message(json.message, "info", 1000);
         });
+    },
 
+    mintToken: function (params) {
+        const promise = tokenService.mintTokenInPublic(params)
+        promise.then(function (json) {
+
+            if(json.status == "00") {
+                logic.selectTokens();
+            }
+
+            webix.message(json.message, "info", 1000);
+        });
     },
 
     getTokenTypes: function () {

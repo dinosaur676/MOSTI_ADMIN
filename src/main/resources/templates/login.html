@@ -16,6 +16,13 @@
 	</div>
 </html>
 
+<script th:inline="javascript">
+	const token = [[${_csrf.token}]];
+	const parameterName = [[${_csrf.parameterName}]];
+	//console.log("token:" + token);
+</script>
+
+
 <script type="text/javascript">
 webix.ui({
     type:"wide",
@@ -23,27 +30,36 @@ webix.ui({
     cols: [
       {},
       {
-        rows: [
-          {},
-          {
-            view:"form",
-            id:"login_form",
-            css: "mc_login_form",
-            width:400,
-            elements:[
-              { view:"label", label:"EMBLOCK", width:400},
-              { view:"text", label:"", name:"loginId", id:"loginId", height: 50, placeholder: "계정",required:true,invalidMessage:"계정을 입력해주세요."  },
-              { view:"text", type:"password", label:"", id: "password", name:"password", height: 50, placeholder: "비밀번호" ,required:true,invalidMessage:"비밀번호를 입력해주세요." },
-              { view:"button", value:"로그인" , height: 50,
-                css: "",
-                click: function() {
-                  loginProcess();
-                }
-              }
-            ]
-          },
-          {}
-        ]
+		  rows: [
+			  {},
+			  {
+				  view: "form",
+				  id: "login_form",
+				  css: "mc_login_form",
+				  width: 400,
+				  elements: [
+					  {view: "label", label: "MOSTI", width: 400},
+					  {view: "text", type: "hidden", label: "", name: parameterName, value: token, hidden: true},
+					  {view: "text", label: "", name: "loginId", id: "loginId", height: 50, placeholder: "계정"},
+					  {
+						  view: "text",
+						  type: "password",
+						  label: "",
+						  name: "password",
+						  height: 50,
+						  placeholder: "비밀번호"
+					  },
+					  {
+						  view: "button", value: "로그인", height: 50,
+						  css: "",
+						  click: function () {
+							  loginProcess();
+						  }
+					  }
+				  ]
+			  },
+			  {}
+		  ]
       },
       {}
     ]
@@ -56,23 +72,9 @@ webix.UIManager.addHotKey("enter", function(){
 });
 
 function loginProcess() {
-	var form = $$('login_form')
+	var form = $$("login_form");
 	if (form.validate()) {
-		const params = {
-			"loginId" : form.elements["loginId"].getValue(),
-			"password" : form.elements["password"].getValue(),
-		}
-		var promise = webix.ajax().headers({
-			"Content-Type" : "application/json"
-		}).post("/page/login", params);
-
-		promise.then(recvData => {
-			const json = recvData.json();
-
-			if(json.status == "00") {
-				location.href = "/page/user"
-			}
-		})
+		webix.send("/page/login", form.getValues());
 	}
 };
 
